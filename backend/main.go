@@ -6,6 +6,7 @@ import (
 	"punktomat/database"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -29,6 +30,12 @@ func initDatabase() {
 
 func main() {
 	app := fiber.New()
+
+	if os.Getenv("ENVIRONMENT") == "DEV" {
+		app.Use(cors.New())
+
+	}
+
 	initDatabase()
 
 	app.Get("/", func(c *fiber.Ctx) error {
