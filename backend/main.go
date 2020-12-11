@@ -5,6 +5,7 @@ import (
 	"os"
 	"punktomat/controller"
 	"punktomat/database"
+	"punktomat/model"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -27,6 +28,8 @@ func initDatabase() {
 		panic("Failed to connect to database")
 	}
 	fmt.Println("Database connection successful")
+
+	database.DBConn.Debug().AutoMigrate(&model.ScienceMagazine{})
 }
 
 func setupRoutes(app *fiber.App) {
