@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"punktomat/controller"
 	"punktomat/database"
 
 	"github.com/gofiber/fiber/v2"
@@ -28,6 +29,10 @@ func initDatabase() {
 	fmt.Println("Database connection successful")
 }
 
+func setupRoutes(app *fiber.App) {
+	app.Get("/api/scienceMagazine", controller.GetScienceMagazines)
+}
+
 func main() {
 	app := fiber.New()
 
@@ -41,6 +46,8 @@ func main() {
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("test")
 	})
+
+	setupRoutes(app)
 
 	app.Listen(":4000")
 }
