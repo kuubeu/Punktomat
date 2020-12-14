@@ -80,11 +80,14 @@ func main() {
 	}
 
 	initDatabase()
-	//initModel("./wykaz.xlsx", 3)
-
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.JSON(database.DBConn.Find((&model.ScienceMagazine{})))
-	})
+	
+	var sa []model.ScienceMagazine
+	if err := database.DBConn.Where("id = ?", "1").First(&sa).Error; err != nil {
+		initModel("./wykaz.xlsx", 3)
+		app.Get("/", func(c *fiber.Ctx) error {
+			return c.JSON(sa)
+		})
+	}
 
 	setupRoutes(app)
 
