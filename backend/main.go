@@ -2,13 +2,17 @@ package main
 
 import (
 	"fmt"
+	"strconv"
+
 	"os"
 	"punktomat/controller"
 	"punktomat/database"
 	"punktomat/model"
 
+	"github.com/360EntSecGroup-Skylar/excelize/v2"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/lib/pq"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -29,25 +33,57 @@ func initDatabase() {
 	}
 	fmt.Println("Database connection successful")
 
-	database.DBConn.Debug().AutoMigrate(&model.ScienceMagazine{})
+	database.DBConn.AutoMigrate(&model.ScienceMagazine{})
 }
 
 func setupRoutes(app *fiber.App) {
 	app.Get("/api/scienceMagazine", controller.GetScienceMagazines)
 }
 
+func initModel(filename string, labelsRow int) {
+	file, err := excelize.OpenFile(filename)
+	if err != nil {
+		panic("Failed to open .xlsx file")
+	}
+	fmt.Println(".xlsx file opened")
+
+	rows, err := file.GetRows("Czasopisma")
+
+	for i := labelsRow + 1 ; i < len(rows); i++ {
+		var categories []int64
+		for index, colCell := range rows[i] {	
+			if colCell == "x" {
+				number,_ := strconv.ParseInt(rows[labelsRow][index], 10, 64)
+				categories = append(categories, number)
+			}
+		}
+		points, _ := strconv.Atoi(rows[i][7])
+		magazine := model.ScienceMagazine{
+			Title: rows[i][1],
+			Issn: rows[i][2],
+			Eissn: rows[i][3],
+			SecondTitle: rows[i][4],
+			SecondIssn: rows[i][5],
+			SecondEissn: rows[i][6],
+			Points: points,
+			Categories: pq.Int64Array(categories),
+		}
+		database.DBConn.Create(&magazine)
+	}
+}
+
 func main() {
 	app := fiber.New()
 
 	if os.Getenv("ENVIRONMENT") == "DEV" {
-		app.Use(cors.New())
-
+	 	app.Use(cors.New())
 	}
 
 	initDatabase()
+	//initModel("./wykaz.xlsx", 3)
 
 	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("test")
+		return c.JSON(database.DBConn.Find((&model.ScienceMagazine{})))
 	})
 
 	setupRoutes(app)
