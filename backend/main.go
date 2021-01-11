@@ -7,6 +7,7 @@ import (
 	"os"
 	"punktomat/controller"
 	"punktomat/database"
+	"punktomat/enum"
 	"punktomat/model"
 
 	"github.com/360EntSecGroup-Skylar/excelize/v2"
@@ -54,7 +55,7 @@ func initModel(filename string, labelsRow int) {
 		for index, colCell := range rows[i] {	
 			if colCell == "x" {
 				number,_ := strconv.ParseInt(rows[labelsRow][index], 10, 64)
-				categories = append(categories, number)
+				categories = append(categories, enum.Category[number])
 			}
 		}
 		points, _ := strconv.Atoi(rows[i][7])
