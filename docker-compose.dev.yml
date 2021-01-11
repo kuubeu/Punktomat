@@ -11,6 +11,20 @@ services:
       - 5432:5432
     env_file: .env.dev
 
+  frontend:
+    restart: unless-stopped
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: punktomat-frontend
+    depends_on:
+      - db
+      - backend
+    volumes:
+      - ./frontend:/code
+    ports:
+      - 3000:3000
+
   backend:
     restart: unless-stopped
     build:
