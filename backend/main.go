@@ -7,6 +7,7 @@ import (
 	"os"
 	"punktomat/controller"
 	"punktomat/database"
+	"punktomat/enum"
 	"punktomat/model"
 
 	"github.com/360EntSecGroup-Skylar/excelize/v2"
@@ -50,11 +51,11 @@ func initModel(filename string, labelsRow int) {
 	rows, err := file.GetRows("Czasopisma")
 
 	for i := labelsRow + 1 ; i < len(rows); i++ {
-		var categories []int64
+		var categories []string
 		for index, colCell := range rows[i] {	
 			if colCell == "x" {
 				number,_ := strconv.ParseInt(rows[labelsRow][index], 10, 64)
-				categories = append(categories, number)
+				categories = append(categories, enum.Category[number])
 			}
 		}
 		points, _ := strconv.Atoi(rows[i][7])
@@ -66,7 +67,7 @@ func initModel(filename string, labelsRow int) {
 			SecondIssn: rows[i][5],
 			SecondEissn: rows[i][6],
 			Points: points,
-			Categories: pq.Int64Array(categories),
+			Categories: pq.StringArray(categories),
 		}
 		database.DBConn.Create(&magazine)
 	}

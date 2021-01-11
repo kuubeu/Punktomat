@@ -12,5 +12,5 @@ type ScienceMagazine struct {
 	SecondIssn             string 		 	`json:"secondIssn"`
 	SecondEissn            string 		 	`json:"secondE-issn"`
 	Points                 int           	`json:"points"`
-	Categories		   	   pq.Int64Array 	`gorm:"type:integer[]"`
+	Categories		   	   pq.StringArray  	`gorm:"type:text[]"`
 }
