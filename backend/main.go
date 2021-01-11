@@ -82,7 +82,7 @@ func main() {
 
 	initDatabase()
 	var sa []model.ScienceMagazine	
-	if err := database.DBConn.Where("id = ?", "1").First(&sa).Error; err != nil {
+	if err := database.DBConn.Find(&sa, []int{1,2,3,4,5,6,7,8,9,10}).Error; err != nil {
 		initModel("./wykaz.xlsx", 3)
 	}
 
