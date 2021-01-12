@@ -5,7 +5,14 @@
     </b-navbar>
     <div class="row justify-content-md-center">
       <div class="col-11">
+        <b-skeleton-table
+          v-if="loading"
+          :rows="10"
+          :columns="5"
+          :table-props="{ striped: true }"
+        ></b-skeleton-table>
         <b-table
+          v-else
           :fields="fields"
           :items="magazines"
           :select-mode="selectMode"
@@ -13,26 +20,33 @@
           selectable
           @row-selected="onRowSelected"
         >
-          <template #cell(ID)="data">
-            {{ data.item.ID }}
-          </template>
-          <template #cell(points)="data">
-            {{ data.item.points }}
-          </template>
-          <template #cell(title)="data">
-            {{ data.item.title }}
-          </template>
-          <template #cell(issn)="data">
-            {{ data.item.issn }}
-          </template>
           <template #cell(Categories)="data">
-            <div class="tags">
+            <div class="tags" v-if="data.item.Categories.length < 4">
               <div
                 class="chip"
                 v-for="category in data.item.Categories"
                 v-bind:key="data.item.issn + category"
               >
                 {{ category }}
+              </div>
+            </div>
+            <div class="tags" v-else>
+              <div
+                v-for="(category, index) in data.item.Categories"
+                v-bind:key="data.item.issn + category"
+              >
+                <div
+                  class="chip"
+                  v-if="index === 0 || index === 1 || index === 2"
+                >
+                  {{ category }}
+                </div>
+                <div
+                  class="chip"
+                  v-if="index === data.item.Categories.length - 1"
+                >
+                  ...
+                </div>
               </div>
             </div>
           </template>
