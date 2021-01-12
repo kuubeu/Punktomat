@@ -44,7 +44,15 @@
                 <div
                   class="chip"
                   v-if="index === data.item.Categories.length - 1"
+                  v-bind:id="data.item.issn"
                 >
+                  <b-tooltip
+                    v-bind:target="data.item.issn"
+                    triggers="hover"
+                    placement="bottom"
+                  >
+                    {{ data.item.Categories.slice(3).join("\n") }}
+                  </b-tooltip>
                   ...
                 </div>
               </div>
