@@ -4,7 +4,7 @@
       <b-navbar-brand tag="h1" class="mb-0">Punktomat</b-navbar-brand>
     </b-navbar>
     <div class="row justify-content-md-center">
-      <div class="col-11">
+      <div class="col-12">
         <b-skeleton-table
           v-if="loading"
           :rows="10"
@@ -95,7 +95,8 @@ export default {
     setTimeout(
       () =>
         axios.get("http://127.0.0.1:4000/api/scienceMagazine").then((response) => {
-          this.magazines = response.data;
+          this.magazines = response.data.results;
+          this.total = response.data.total;
           this.loading = false;
         }),
       2000
