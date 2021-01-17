@@ -94,7 +94,7 @@ export default {
   mounted() {
     setTimeout(
       () =>
-        axios.get("http://127.0.0.1:4000").then((response) => {
+        axios.get("http://127.0.0.1:4000/api/scienceMagazine").then((response) => {
           this.magazines = response.data;
           this.loading = false;
         }),
