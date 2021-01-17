@@ -50,24 +50,24 @@ func initModel(filename string, labelsRow int) {
 
 	rows, err := file.GetRows("Czasopisma")
 
-	for i := labelsRow + 1 ; i < len(rows); i++ {
+	for i := labelsRow + 1; i < len(rows); i++ {
 		var categories []string
-		for index, colCell := range rows[i] {	
+		for index, colCell := range rows[i] {
 			if colCell == "x" {
-				number,_ := strconv.ParseInt(rows[labelsRow][index], 10, 64)
+				number, _ := strconv.ParseInt(rows[labelsRow][index], 10, 64)
 				categories = append(categories, enum.Category[number])
 			}
 		}
 		points, _ := strconv.Atoi(rows[i][7])
 		magazine := model.ScienceMagazine{
-			Title: rows[i][1],
-			Issn: rows[i][2],
-			Eissn: rows[i][3],
+			Title:       rows[i][1],
+			Issn:        rows[i][2],
+			Eissn:       rows[i][3],
 			SecondTitle: rows[i][4],
-			SecondIssn: rows[i][5],
+			SecondIssn:  rows[i][5],
 			SecondEissn: rows[i][6],
-			Points: points,
-			Categories: pq.StringArray(categories),
+			Points:      points,
+			Categories:  pq.StringArray(categories),
 		}
 		database.DBConn.Create(&magazine)
 	}
@@ -77,18 +77,15 @@ func main() {
 	app := fiber.New()
 
 	if os.Getenv("ENVIRONMENT") == "DEV" {
-	 	app.Use(cors.New())
+		app.Use(cors.New())
 	}
 
 	initDatabase()
-	var sa []model.ScienceMagazine	
-	if err := database.DBConn.Find(&sa, []int{1,2,3,4,5,6,7,8,9,10}).Error; err != nil {
+	var scienceMagazine []model.ScienceMagazine
+
+	if err := database.DBConn.First(&scienceMagazine).Error; err != nil {
 		initModel("./wykaz.xlsx", 3)
 	}
-
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.JSON(sa)
-	})
 
 	setupRoutes(app)
 
