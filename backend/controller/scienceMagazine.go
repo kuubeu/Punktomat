@@ -16,13 +16,16 @@ func GetScienceMagazines(c *fiber.Ctx) error {
 
 	limit, err := strconv.Atoi(c.Query("limit", "100"))
 	offset, err := strconv.Atoi(c.Query("offset", "0"))
+	search := "%" + c.Query("search", "") + "%"
 
 	if err != nil {
 		return c.Status(400).SendString("Invalid query param")
 	}
 
 	db.Model(&model.ScienceMagazine{}).Count(&count)
-	db.Offset(offset).Limit(limit).Find(&scienceMagazine)
+	db.Where("title iLIKE ?", search).Or("second_title iLIKE ?",
+		search).Offset(offset).Limit(limit).Find(
+		&scienceMagazine)
 
 	return c.JSON(fiber.Map{
 		"total": count, "results": scienceMagazine,
