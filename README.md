@@ -12,16 +12,16 @@ Requirements:
 
 Build dev images:
 
-```
+```shell
 make build-dev
 ```
 
 Run development server:
 
-```
+```shell
 make dev
 ```
 
-Backend will be available at [localhost:4000](http://localhost:4000/api/scienceMagazine).
+Backend will be available at [localhost:4000/api/scienceMagazine](http://localhost:4000/api/scienceMagazine).
 
 Frontend will be available at [localhost:8080](http://localhost:8080).
