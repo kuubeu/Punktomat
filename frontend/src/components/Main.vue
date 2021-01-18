@@ -8,7 +8,7 @@
         md-dense
         v-if="selected"
       >
-        <md-button class="md-icon-button">
+        <md-button @click="showModal" class="md-icon-button">
           <md-icon>article</md-icon>
         </md-button>
       </md-badge>
@@ -31,6 +31,26 @@
         v-bind:selected="selected"
       />
     </div>
+    <b-modal
+      ref="my-modal"
+      size="xl"
+      hide-footer
+      title="Using Component Methods"
+    >
+      <div
+        class="d-block text-center"
+        v-for="select in selected"
+        v-bind:key="select.issn"
+      >
+        <p>{{ select }}</p>
+      </div>
+      <b-button class="mt-3" variant="outline-danger" block @click="hideModal"
+        >Zamknij</b-button
+      >
+      <b-button class="mt-2" variant="outline-warning" block @
+        >Generuj PDF</b-button
+      >
+    </b-modal>
   </div>
 </template>
 
@@ -59,6 +79,12 @@ export default {
   methods: {
     getSelected: function() {
       this.selected = [...JSON.parse(localStorage.getItem("selected"))];
+    },
+    showModal() {
+      this.$refs["my-modal"].show();
+    },
+    hideModal() {
+      this.$refs["my-modal"].hide();
     },
   },
   mounted() {
