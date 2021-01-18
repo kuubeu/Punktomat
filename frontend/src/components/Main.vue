@@ -4,72 +4,23 @@
       <b-navbar-brand tag="h1" class="mb-0">Punktomat</b-navbar-brand>
     </b-navbar>
     <div class="row justify-content-md-center">
-      <div class="col-12">
-        <b-skeleton-table
-          v-if="loading"
-          :rows="10"
-          :columns="5"
-          :table-props="{ striped: true }"
-        ></b-skeleton-table>
-        <b-table
-          v-else
-          :fields="fields"
-          :items="magazines"
-          :select-mode="selectMode"
-          ref="selectableTable"
-          selectable
-          @row-selected="onRowSelected"
-        >
-          <template #cell(Categories)="data">
-            <div class="tags" v-if="data.item.Categories.length < 4">
-              <div
-                class="chip"
-                v-for="category in data.item.Categories"
-                v-bind:key="data.item.issn + category"
-              >
-                {{ category }}
-              </div>
-            </div>
-            <div class="tags" v-else>
-              <div
-                v-for="(category, index) in data.item.Categories"
-                v-bind:key="data.item.issn + category"
-              >
-                <div
-                  class="chip"
-                  v-if="index === 0 || index === 1 || index === 2"
-                >
-                  {{ category }}
-                </div>
-                <div
-                  class="chip"
-                  v-if="index === data.item.Categories.length - 1"
-                  v-bind:id="data.item.issn"
-                >
-                  <b-tooltip
-                    v-bind:target="data.item.issn"
-                    triggers="hover"
-                    placement="bottom"
-                  >
-                    {{ data.item.Categories.slice(3).join("\n") }}
-                  </b-tooltip>
-                  ...
-                </div>
-              </div>
-            </div>
-          </template>
-        </b-table>
-      </div>
+      <Table
+        v-bind:selectMode="selectMode"
+        v-bind:loading="loading"
+        v-bind:fields="fields"
+        v-bind:magazines="magazines"
+      />
     </div>
-    {{ selected }}
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import Table from "./Table";
 
 export default {
   name: "Main",
+  components: { Table },
   data() {
     return {
       magazines: null,
@@ -82,25 +33,14 @@ export default {
         { key: "Categories", label: "Kategorie" },
       ],
       selectMode: "multi",
-      numbers: [...Array(20).keys()],
-      selected: [],
     };
   },
-  methods: {
-    onRowSelected(items) {
-      this.selected = items;
-    },
-  },
   mounted() {
-    setTimeout(
-      () =>
-        axios.get("http://127.0.0.1:4000/api/scienceMagazine").then((response) => {
-          this.magazines = response.data.results;
-          this.total = response.data.total;
-          this.loading = false;
-        }),
-      2000
-    );
+    axios.get("http://127.0.0.1:4000/api/scienceMagazine").then((response) => {
+      this.magazines = response.data.results;
+      this.total = response.data.total;
+      this.loading = false;
+    });
   },
 };
 </script>
