@@ -1,13 +1,6 @@
 <template>
   <div class="col-12">
-    <b-skeleton-table
-      v-if="loading"
-      :rows="10"
-      :columns="5"
-      :table-props="{ striped: true }"
-    ></b-skeleton-table>
     <b-table
-      v-else
       :fields="fields"
       :items="magazines"
       :select-mode="selectMode"
@@ -63,11 +56,26 @@ export default {
       selected: [],
     };
   },
-  props: ["selectMode", "fields", "loading", "magazines"],
+  props: ["selectMode", "fields", "magazines"],
+  mounted() {
+    if (JSON.parse(localStorage.getItem("selected"))) {
+      this.selected = [...JSON.parse(localStorage.getItem("selected"))];
+      this.selected.map((value) => {
+        let i = 0;
+        this.magazines.map((valueMagazine) => {
+          if (valueMagazine.ID == value.ID) {
+            this.$refs.selectableTable.selectRow(i);
+          }
+          i++;
+        });
+      });
+    }
+  },
   methods: {
     onRowSelected(items) {
       this.selected = items;
       localStorage.setItem("selected", JSON.stringify(this.selected));
+      this.$emit("clicked");
     },
   },
 };
