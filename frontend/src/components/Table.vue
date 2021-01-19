@@ -36,7 +36,7 @@
                 triggers="hover"
                 placement="bottom"
               >
-                {{ data.item.Categories.slice(3).join("\n") }}
+                {{ data.item.Categories.slice(3,0).join("\n") }}
               </b-tooltip>
               ...
             </div>
