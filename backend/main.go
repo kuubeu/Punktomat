@@ -80,6 +80,11 @@ func main() {
 
 	if os.Getenv("ENVIRONMENT") == "DEV" {
 		app.Use(cors.New())
+	} else {
+		app.Use(cors.New(cors.Config{
+			AllowOrigins: "https://punktomat.herokuapp.com",
+			AllowHeaders: "Origin, Content-Type, Accept",
+		}))
 	}
 
 	initDatabase()
