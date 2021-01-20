@@ -58,7 +58,8 @@
 import axios from "axios";
 import Table from "./Table";
 import {jsPDF} from "jspdf";
-//import {html2canvas} from "html2canvas"
+//import html2canvas from "html2canvas"
+//import pdfMake from "pdfmake";
 //import {addHTML} from "html2canvas";
 //import rasterizehtml from "rasterizehtml";
 
@@ -98,12 +99,12 @@ export default {
 //pdf.text((localStorage.getItem("selected")), 20, 10);
 //const text=localStorage.getItem("selected");
 //text.slice(0,2);
-const pdf = new jsPDF();
-
-
+//const pdf = new jsPDF();
+//const para=console.log(JSON.stringify(this.selected));
+//console.log(JSON.stringify(this.selected));
 const element = document.createElement('div');
 element.content = "sa";
-console.log(element);
+//console.log(element);
 //const line=JSON.stringify(this.selected);
 //line.forEach(cutting);
 
@@ -111,7 +112,7 @@ console.log(element);
 //pdf.text((localStorage.getItem("selected").slice(0.70)), 20, 10);}
 /*
 var canvasElement = document.createElement('canvas');
-    html2canvas(this.$refs.selectableTable, { canvas: canvasElement 
+    html2canvas(), { canvas: canvasElement 
       }).then(function (canvas) {
     const img = canvas.toDataURL("image/jpeg", 0.8);
     pdf.addImage(img,'JPEG',20,20);
@@ -119,25 +120,100 @@ var canvasElement = document.createElement('canvas');
    });
 */
 
+//JSON.stringify(this.selected).split(:);
+/*
+const sliced = Object.keys(this.selected).slice(0, 2).reduce((result, key) => {
+                    result[key] = this.selected[key];
+
+                    return result;
+                }, {});
+
+console.log(sliced);
+*/
+//const fraze="Categories";
+//console.log(JSON.stringify(this.selected).split(fraze));
+
+
+
+/*
+const doc = new jsPDF();
+  //const contentHtml = this.$refs.selectableTableselectRow(1);
+  doc.html(this.$refs.selectableTable, {
+   callback: function (doc) {
+     doc.save();
+   },
+   x: 10,
+   y: 10
+});
+  doc.save("sample.pdf");
+
+  */
+  
+/*
+   var printDoc = new jsPDF();
+    printDoc.HTML('#__BVID__406___BV_modal_body_').get(0), 10, 10, {'width': 180});
+    printDoc.autoPrint();
+    printDoc.output("dataurlnewwindow");
+*/
 
 
 
 
-
-
-
-
-pdf.html(`<p>${JSON.stringify(this.selected).slice(0,157)}</p>`, {callback: function(pdf){pdf.save("a4.pdf");}, x: 10, y: 10});
+//pdf.html(`<p>${JSON.stringify(this.selected).split(fraze).slice(0)}</p>`, {callback: function(pdf){pdf.save("a4.pdf");}, x: 10, y: 10});
 //pdf.html(`<p>${JSON.stringify(this.selected)}</p>`, {callback: function(pdf){pdf.save("a4.pdf");}, x: 10, y: 10});
-
+//const text=this.selected;
 //var splitTitle = pdf.splitTextToSize(text, 160);
-
+//const contentHtml = JSON.stringify(this.selected);
 //pdf.(15, 20, `<div>dfgdsgdsfg</div>`);
 //pdf.html(contentHtml, 15, 15, {  width: 1920 });
 
 
    
 //pdf.save("a4.pdf");
+
+
+
+
+
+console.log(this.selected);
+
+
+var doc = new jsPDF();
+this.selected.forEach(function(line, i){
+  
+//var splitTitle = doc.splitTextToSize(line.title, 100);
+//doc.text(15, 20, splitTitle);
+    doc.text(15, 15 + (i * 20),
+    
+        //"Categories: " + line.Categories +
+        "ID: " + line.ID+" "+
+        //"e-issn"+line.e-issn +
+        "issn: "+ line.issn + " "+
+        "points :"+line.points + " "+
+        "second issn: "+line.secondIssn +"\n "+
+       // "second eissn"+line.secondE-issn +
+        "title: " +line.title +"\n "+
+        "second title: " +line.secondTitle +" "
+        
+        //doc.line(15,17 + (i * 10),15,(50 +i*10 ))
+        
+        );
+
+        
+       // doc.line(15,17 + (i * 20),200,17 + (i * 20));
+});
+//doc.table(1,1,this.selected);
+
+this.selected.forEach(function(line, i){
+doc.line(15,17 + (i * 20),200,17 + (i * 20));
+
+});
+doc.save('Test.pdf');
+
+
+
+
+
 
 
     }
