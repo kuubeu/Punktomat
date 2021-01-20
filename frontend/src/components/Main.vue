@@ -2,74 +2,65 @@
   <div class=".container-fluid">
     <b-navbar variant="faded" type="light">
       <b-navbar-brand tag="h1" class="mb-0">Punktomat</b-navbar-brand>
+      <md-badge
+        class="md-primary"
+        v-bind:md-content="selected.length"
+        md-dense
+        v-if="selected"
+      >
+        <md-button @click="showModal" class="md-icon-button">
+          <md-icon>article</md-icon>
+        </md-button>
+      </md-badge>
+      <md-icon v-else>article</md-icon>
     </b-navbar>
     <div class="row justify-content-md-center">
-      <div class="col-11">
-        <b-skeleton-table
-          v-if="loading"
-          :rows="10"
-          :columns="5"
-          :table-props="{ striped: true }"
-        ></b-skeleton-table>
-        <b-table
-          v-else
-          :fields="fields"
-          :items="magazines"
-          :select-mode="selectMode"
-          ref="selectableTable"
-          selectable
-          @row-selected="onRowSelected"
-        >
-          <template #cell(Categories)="data">
-            <div class="tags" v-if="data.item.Categories.length < 4">
-              <div
-                class="chip"
-                v-for="category in data.item.Categories"
-                v-bind:key="data.item.issn + category"
-              >
-                {{ category }}
-              </div>
-            </div>
-            <div class="tags" v-else>
-              <div
-                v-for="(category, index) in data.item.Categories"
-                v-bind:key="data.item.issn + category"
-              >
-                <div
-                  class="chip"
-                  v-if="index === 0 || index === 1 || index === 2"
-                >
-                  {{ category }}
-                </div>
-                <div
-                  class="chip"
-                  v-if="index === data.item.Categories.length - 1"
-                  v-bind:id="data.item.issn"
-                >
-                  <b-tooltip
-                    v-bind:target="data.item.issn"
-                    triggers="hover"
-                    placement="bottom"
-                  >
-                    {{ data.item.Categories.slice(3).join("\n") }}
-                  </b-tooltip>
-                  ...
-                </div>
-              </div>
-            </div>
-          </template>
-        </b-table>
-      </div>
+      <b-skeleton-table
+        v-if="loading"
+        :rows="10"
+        :columns="5"
+        :table-props="{ striped: true }"
+      ></b-skeleton-table>
+      <Table
+        v-else
+        @clicked="getSelected()"
+        v-bind:selectMode="selectMode"
+        v-bind:loading="loading"
+        v-bind:fields="fields"
+        v-bind:magazines="magazines"
+        v-bind:selected="selected"
+      />
     </div>
-    {{ selected }}
+    <b-modal
+      ref="my-modal"
+      size="xl"
+      hide-footer
+      title="Using Component Methods"
+    >
+      <div
+        class="d-block text-center"
+        v-for="select in selected"
+        v-bind:key="select.issn"
+      >
+        <p>{{ select }}</p>
+      </div>
+      <b-button class="mt-3" variant="outline-danger" block @click="hideModal"
+        >Zamknij</b-button
+      >
+      <b-button class="mt-2" variant="outline-warning" block @
+        >Generuj PDF</b-button
+      >
+    </b-modal>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import Table from "./Table";
 
 export default {
   name: "Main",
+  components: { Table },
   data() {
     return {
       magazines: null,
@@ -82,24 +73,29 @@ export default {
         { key: "Categories", label: "Kategorie" },
       ],
       selectMode: "multi",
-      numbers: [...Array(20).keys()],
       selected: [],
     };
   },
   methods: {
-    onRowSelected(items) {
-      this.selected = items;
+    getSelected: function() {
+      this.selected = [...JSON.parse(localStorage.getItem("selected"))];
+    },
+    showModal() {
+      this.$refs["my-modal"].show();
+    },
+    hideModal() {
+      this.$refs["my-modal"].hide();
     },
   },
   mounted() {
-    setTimeout(
-      () =>
-        axios.get(`${process.env.VUE_APP_API_URL}/scienceMagazine`).then((response) => {
-          this.magazines = response.data;
-          this.loading = false;
-        }),
-      2000
-    );
+    if (JSON.parse(localStorage.getItem("selected"))) {
+      this.selected = [...JSON.parse(localStorage.getItem("selected"))];
+    }
+    axios.get(`${process.env.VUE_APP_API_URL}/scienceMagazine`).then((response) => {
+      this.magazines = response.data.results;
+      this.total = response.data.total;
+      this.loading = false;
+    });
   },
 };
 </script>

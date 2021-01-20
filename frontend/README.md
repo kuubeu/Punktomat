@@ -1,24 +1,29 @@
-# frontend
+# Front-end
 
-## Project setup
-```
+Project setup
+
+```node
 yarn install
 ```
 
-### Compiles and hot-reloads for development
-```
+Compile and enable hot-reload for development:
+
+```node
 yarn serve
 ```
 
-### Compiles and minifies for production
-```
+Compile and minify for production:
+
+```node
 yarn build
 ```
 
-### Lints and fixes files
-```
+Lint and fix files:
+
+```node
 yarn lint
 ```
 
-### Customize configuration
+## Customize configuration
+
 See [Configuration Reference](https://cli.vuejs.org/config/).
