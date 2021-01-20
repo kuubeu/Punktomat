@@ -38,7 +38,7 @@ func initDatabase() {
 }
 
 func setupRoutes(app *fiber.App) {
-	app.Get("/api/scienceMagazine", controller.GetScienceMagazines)
+	app.Get("/scienceMagazine", controller.GetScienceMagazines)
 }
 
 func initModel(filename string, labelsRow int) {

@@ -1,11 +1,24 @@
-FROM golang:1.15.6
+FROM golang:1.15.6-alpine
+
+ENV GO111MODULE=on \
+    CGO_ENABLED=0 \
+    GOOS=linux \
+    GOARCH=amd64
 
 WORKDIR /code
 
-RUN go get -u github.com/cosmtrek/air
-
-COPY go.mod go.sum /code/
+COPY go.mod .
+COPY go.sum .
 RUN go mod download
-COPY . /code
 
-CMD air
+COPY . .
+
+RUN go build -o main .
+
+WORKDIR /dist
+
+RUN cp /code/main .
+
+EXPOSE 4000
+
+CMD ["/dist/main"]
