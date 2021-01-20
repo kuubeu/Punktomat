@@ -22,7 +22,7 @@ jobs:
         name: Deploy backend
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "api-punktomat"
+          heroku_app_name: "punktomat-api"
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           usedocker: true
           appdir: "backend"
