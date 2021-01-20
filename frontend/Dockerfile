@@ -1,5 +1,7 @@
 FROM node:alpine3.12 as build
 
+ENV VUE_APP_API_URL=https://punktomat-api.herokuapp.com
+
 WORKDIR /code
 
 COPY package.json yarn.lock ./

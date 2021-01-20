@@ -94,7 +94,7 @@ export default {
   mounted() {
     setTimeout(
       () =>
-        axios.get("http://127.0.0.1:4000/api/scienceMagazine").then((response) => {
+        axios.get(`${process.env.VUE_APP_API_URL}/scienceMagazine`).then((response) => {
           this.magazines = response.data;
           this.loading = false;
         }),

@@ -26,6 +26,7 @@ services:
       - /code/node_modules
     ports:
       - 8080:8080
+    env_file: dev.env
 
   backend:
     restart: unless-stopped
