@@ -83,12 +83,6 @@ func main() {
 	}
 
 	initDatabase()
-	var scienceMagazine []model.ScienceMagazine
-
-	if err := database.DBConn.First(&scienceMagazine).Error; err != nil {
-		initModel("./wykaz.xlsx", 3)
-	}
-
 	setupRoutes(app)
 
 	port := os.Getenv("PORT")
@@ -96,4 +90,9 @@ func main() {
 		port = "4000"
 	}
 	app.Listen(":" + port)
+
+	var scienceMagazine []model.ScienceMagazine
+	if err := database.DBConn.First(&scienceMagazine).Error; err != nil {
+		initModel("./wykaz.xlsx", 3)
+	}
 }
