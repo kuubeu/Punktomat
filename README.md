@@ -25,3 +25,7 @@ make dev
 Backend will be available at [localhost:4000](http://localhost:4000).
 
 Frontend will be available at [localhost:8080](http://localhost:8080).
+
+## Live version
+
+[https://punktomat.herokuapp.com](https://punktomat.herokuapp.com)
