@@ -18,6 +18,7 @@ RUN go build -o main .
 WORKDIR /dist
 
 RUN cp /code/main .
+RUN cp /code/wykaz.xlsx .
 
 EXPOSE 4000
 
