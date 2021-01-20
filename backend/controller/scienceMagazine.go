@@ -30,11 +30,10 @@ func GetScienceMagazines(c *fiber.Ctx) error {
 			"categories @> ARRAY[?]", category)
 	}
 
-	db.Model(&model.ScienceMagazine{}).Count(&count)
 	chain.Where(
 		"title iLIKE ? OR second_title iLIKE ?", search, search).Offset(
 		offset).Limit(limit).Find(
-		&scienceMagazine)
+		&scienceMagazine).Count(&count)
 
 	return c.JSON(fiber.Map{
 		"total": count, "results": scienceMagazine,
