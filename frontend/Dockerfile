@@ -14,6 +14,6 @@ FROM nginx:1.19.6-alpine
 
 COPY --from=build /code/dist /usr/share/nginx/html
 
-EXPOSE 80
+COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD sed -i -e 's/$PORT/'"$PORT"'/g' /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'
