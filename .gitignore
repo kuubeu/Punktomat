@@ -217,11 +217,6 @@ media/
 *.sqlite3
 *.db
 
-# Configuration file with private data:
-*.env
-.env
-.env.production
-
 # Local settings files:
 *local.py
 

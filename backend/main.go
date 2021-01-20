@@ -38,7 +38,7 @@ func initDatabase() {
 }
 
 func setupRoutes(app *fiber.App) {
-	app.Get("/api/scienceMagazine", controller.GetScienceMagazines)
+	app.Get("/scienceMagazine", controller.GetScienceMagazines)
 }
 
 func initModel(filename string, labelsRow int) {
@@ -71,6 +71,8 @@ func initModel(filename string, labelsRow int) {
 		}
 		database.DBConn.Create(&magazine)
 	}
+
+	fmt.Println("Magazines successfully loaded")
 }
 
 func main() {
@@ -78,16 +80,25 @@ func main() {
 
 	if os.Getenv("ENVIRONMENT") == "DEV" {
 		app.Use(cors.New())
+	} else {
+		app.Use(cors.New(cors.Config{
+			AllowOrigins: "https://punktomat.herokuapp.com",
+			AllowHeaders: "Origin, Content-Type, Accept",
+		}))
 	}
 
 	initDatabase()
-	var scienceMagazine []model.ScienceMagazine
+	setupRoutes(app)
 
+	var scienceMagazine []model.ScienceMagazine
 	if err := database.DBConn.First(&scienceMagazine).Error; err != nil {
 		initModel("./wykaz.xlsx", 3)
 	}
 
-	setupRoutes(app)
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "4000"
+	}
+	app.Listen(":" + port)
 
-	app.Listen(":4000")
 }

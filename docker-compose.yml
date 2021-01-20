@@ -9,13 +9,13 @@ services:
       - pgdata:/var/lib/postgresql/data
     ports:
       - 5432:5432
-    env_file: .env.dev
+    env_file: dev.env
 
   frontend:
     restart: unless-stopped
     build:
       context: ./frontend
-      dockerfile: Dockerfile.dev
+      dockerfile: dev.Dockerfile
     container_name: punktomat-frontend
     command: yarn serve
     depends_on:
@@ -26,12 +26,13 @@ services:
       - /code/node_modules
     ports:
       - 8080:8080
+    env_file: dev.env
 
   backend:
     restart: unless-stopped
     build:
       context: ./backend
-      dockerfile: Dockerfile.dev
+      dockerfile: dev.Dockerfile
     container_name: punktomat-backend
     depends_on:
       - db
@@ -39,7 +40,7 @@ services:
       - ./backend:/code
     ports:
       - 4000:4000
-    env_file: .env.dev
+    env_file: dev.env
 
 volumes:
   pgdata:
