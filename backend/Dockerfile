@@ -20,6 +20,4 @@ WORKDIR /dist
 RUN cp /code/main .
 RUN cp /code/wykaz.xlsx .
 
-EXPOSE 4000
-
 CMD ["/dist/main"]

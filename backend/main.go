@@ -71,6 +71,8 @@ func initModel(filename string, labelsRow int) {
 		}
 		database.DBConn.Create(&magazine)
 	}
+
+	fmt.Println("Magazines successfully loaded")
 }
 
 func main() {
@@ -89,5 +91,9 @@ func main() {
 
 	setupRoutes(app)
 
-	app.Listen(":4000")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "4000"
+	}
+	app.Listen(":" + port)
 }
