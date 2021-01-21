@@ -169,7 +169,7 @@
         searchText: "",
         filtersDialog: false,
         options: {
-          params: {
+          data: {
             "categories": [
               ""
             ],
@@ -195,7 +195,7 @@
       getDataFromApi () {
         this.loading = true
         axios
-          .get(`${process.env.VUE_APP_API_URL}/scienceMagazine`, this.options)
+          .post(`${process.env.VUE_APP_API_URL}/scienceMagazine`, this.options)
           .then(response => {
             this.magazines = response.data.results
             this.totalMagazines = response.data.total
