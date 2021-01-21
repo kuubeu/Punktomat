@@ -114,7 +114,7 @@
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon v-bind="attrs" v-on="on" class="ml-2">
             <!-- <v-icon>mdi-pdf-box</v-icon> -->
-            <v-icon>mdi-file-download-outline</v-icon>
+            <v-icon @click="genPDF">mdi-file-download-outline</v-icon>
           </v-btn>
         </template>
         <span>Zapisz ulubione do PDF</span>
@@ -145,6 +145,7 @@
 <script>
 import axios from "axios";
 import Table from "./Table";
+import { jsPDF } from "jspdf";
 
 export default {
   name: "Main",
@@ -272,6 +273,73 @@ export default {
     tableSelectionChanged(selected) {
       this.selected = selected;
       localStorage.setItem("starred", JSON.stringify(this.selected));
+    },
+    genPDF() {
+      var articles_count = 0; //amount of articles
+      var doc = new jsPDF();
+      this.selected.forEach(function(line, i) {
+        //renders firts page
+        articles_count = i + 1;
+        var splitTitle = doc.splitTextToSize(line.title, 120);
+        //var splitSecondTitle = doc.splitTextToSize(line.secondTitle, 120);
+        doc.text(
+          15,
+          15 + i * 32,
+
+          "ID: " +
+            line.ID +
+            " " +
+            "issn: " +
+            line.issn +
+            " " +
+            "points :" +
+            line.points +
+            " " +
+            "second issn: " +
+            line.secondIssn +
+            "\n "
+        );
+        doc.line(15, 17 + i * 32, 200, 17 + i * 32);
+        doc.text(15, 23 + i * 32, "Title:");
+        doc.text(30, 23 + i * 32, splitTitle);
+        doc.text(15, 41 + i * 32, "");
+        doc.text(50, 41 + i * 32, "");
+      });
+      var pages_neded = Math.round(articles_count / 9) + 1;
+      if (articles_count > 9) {
+        //rendering second and else pages
+        for (var page = 1; page < pages_neded; page++) {
+          doc.addPage();
+          var sliced = this.selected.slice(9 * page);
+          sliced.forEach(function(line, i) {
+            // var splitSecondTitle = doc.splitTextToSize(line.secondTitle, 140);
+            var splitTitle = doc.splitTextToSize(line.title, 180);
+            doc.text(
+              15,
+              15 + i * 32,
+
+              "ID: " +
+                line.ID +
+                " " +
+                "issn: " +
+                line.issn +
+                " " +
+                "points :" +
+                line.points +
+                " " +
+                "second issn: " +
+                line.secondIssn +
+                "\n "
+            );
+            doc.line(15, 17 + i * 32, 200, 17 + i * 32);
+            doc.text(15, 28 + i * 32, "Title:");
+            doc.text(30, 28 + i * 32, splitTitle);
+            doc.text(15, 41 + i * 32, "");
+            doc.text(50, 41 + i * 32, "");
+          });
+        }
+      }
+      doc.save("ChosenArticles.pdf");
     },
   },
 };
