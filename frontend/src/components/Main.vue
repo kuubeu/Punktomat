@@ -98,22 +98,26 @@ var doc = new jsPDF();
 this.selected.forEach(function(line, i){
   
 
-    doc.text(15, 15 + (i * 20),
+    doc.text(15, 15 + (i * 32),
     
-        //"Categories: " + line.Categories +
-        "ID: " + line.ID+" "+
+        
+        "ID: " + line.ID +" "+
         "issn: "+ line.issn + " "+
         "points :"+line.points + " "+
         "second issn: "+line.secondIssn +"\n "+
-        "title: " +line.title +"\n "+
+        //"title: " +line.title +"\n "+
+        
+        //splitTitle +
         "second title: " +line.secondTitle +" "
         );     
 });
 
 
 this.selected.forEach(function(line, i){
-doc.line(15,17 + (i * 20),200,17 + (i * 20));
-
+var splitTitle = doc.splitTextToSize(line.title, 120);
+doc.line(15,17 + (i * 32),200,17 + (i * 32));
+doc.text(15, 28 + (i * 32), "Title:");
+doc.text(30, 28 + (i * 32), splitTitle);
 });
 doc.save('Test.pdf');
 
