@@ -93,10 +93,11 @@ export default {
     },
     genPDF(){
 
-
+ var articles_count=0;//amount of articles
 var doc = new jsPDF();
+
 this.selected.forEach(function(line, i){
-  
+ articles_count=i+1;
 
     doc.text(15, 15 + (i * 32),
     
@@ -115,10 +116,79 @@ this.selected.forEach(function(line, i){
 
 this.selected.forEach(function(line, i){
 var splitTitle = doc.splitTextToSize(line.title, 120);
+
+
+//var splitTitle = doc.splitTextToSize(line.title, 120);
 doc.line(15,17 + (i * 32),200,17 + (i * 32));
 doc.text(15, 28 + (i * 32), "Title:");
 doc.text(30, 28 + (i * 32), splitTitle);
 });
+var pages_neded=(Math.round(articles_count/9)  +1  );
+console.log(pages_neded);
+
+if(articles_count>9){//rendering second and else pages
+
+
+for(var page=1;page<pages_neded;page++){
+
+doc.addPage();
+var sliced=this.selected.slice(9*page);
+sliced.forEach(function(line, i){
+ 
+
+    doc.text(15, 15 + (i * 32),
+    
+        
+        "ID: " + line.ID +" "+
+        "issn: "+ line.issn + " "+
+        "points :"+line.points + " "+
+        "second issn: "+line.secondIssn +"\n "+
+        //"title: " +line.title +"\n "+
+        
+        //splitTitle +
+        "second title: " +line.secondTitle +" "
+        );  
+         
+       var splitTitle = doc.splitTextToSize(line.title, 120);
+
+
+//var splitTitle = doc.splitTextToSize(line.title, 120);
+doc.line(15,17 + (i * 32),200,17 + (i * 32));
+doc.text(15, 28 + (i * 32), "Title:");
+doc.text(30, 28 + (i * 32), splitTitle);   
+});
+}
+}
+if(articles_count>9){//rendering second and else pages titles
+
+
+for( page=1;page<pages_neded;page++){
+
+
+
+sliced.forEach(function(line, i){
+ 
+
+    
+    
+        
+       var splitTitle = doc.splitTextToSize(line.title, 120);
+
+
+//var splitTitle = doc.splitTextToSize(line.title, 120);
+doc.line(15,17 + (i * 32),200,17 + (i * 32));
+doc.text(15, 28 + (i * 32), "Title:");
+doc.text(30, 28 + (i * 32), splitTitle);
+            
+});
+}
+}
+
+
+
+
+
+
 doc.save('Test.pdf');
 
 
