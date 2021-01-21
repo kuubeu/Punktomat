@@ -281,25 +281,18 @@
         this.getDataFromApi()
       },
       applyFilters () {
-        for (let filter in this.filters)
-          console.log(this.allCategories[filter])
+        console.log(this.filters)
       },
       clearFilters () {
-        // clear filters
+        this.options.data.categories = []
       },
       tableOptionsChanged (op) {
-        console.log(op)
-        this.options.data.order = op.order
-        this.options.data.orderDirection = op.orderDirection
-        let lim = op.itemsPerPage
+        const options = JSON.parse(JSON.stringify(op))
+        const lim = options.itemsPerPage
+
         this.options.data.limit = lim
-        this.options.data.offset = op.page * lim
-        if(!this.firstLoad) {
-          this.getDataFromApi()
-          this.firstLoad = true
-        } else {
-          this.firstLoad = false
-        }
+        this.options.data.offset = (options.page - 1) * lim
+        this.getDataFromApi()
       },
       tableSelectionChanged (selected) {
         this.selected = selected
