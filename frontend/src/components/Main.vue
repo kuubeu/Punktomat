@@ -120,7 +120,7 @@ doc.text(50, 41 + (i * 32), splitSecondTitle);
 
 
 var pages_neded=(Math.round(articles_count/9)  +1  );
-console.log(pages_neded);
+
 
 if(articles_count>9){//rendering second and else pages
 
@@ -141,12 +141,6 @@ var splitTitle = doc.splitTextToSize(line.title, 180);
         "points :"+line.points + " "+
         "second issn: "+line.secondIssn +"\n "
         );     
-         
-      
-       
-
-
-
 doc.line(15,17 + (i * 32),200,17 + (i * 32));
 doc.text(15, 28 + (i * 32), "Title:");
 doc.text(30, 28 + (i * 32), splitTitle);   
@@ -157,19 +151,7 @@ doc.text(50, 41 + (i * 32), splitSecondTitle);
 }
 
 
-
-
-
-
-
 doc.save('ChosenArticles.pdf');
-
-
-
-
-
-
-
     }
   },
   mounted() {
