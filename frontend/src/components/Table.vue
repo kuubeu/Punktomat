@@ -87,21 +87,12 @@
                 v-bind:key="chip.id"
                 :ripple="false"
               >
-<<<<<<< HEAD
                 {{ chip }}
               </v-chip>
             </v-chip-group>
           </td>
         </tr>
       </tbody>
-=======
-                {{ data.item.Categories.slice(3,0).join("\n") }}
-              </b-tooltip>
-              ...
-            </div>
-          </div>
-        </div>
->>>>>>> test
       </template>
     </v-data-table>
   </div>
