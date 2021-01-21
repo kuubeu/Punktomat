@@ -276,8 +276,9 @@
       searchBtnClicked () {
         this.searchText = this.searchText.trim().replace(/\s+/g, ' ')
         // let q = this.searchText.trim().replace(/\s+/g, ' ')
-        if (this.searchText.length > 0)
-          this.options.data.search = this.searchText
+        this.options.data.offset = 0
+        this.options.data.search = this.searchText
+        this.getDataFromApi()
       },
       applyFilters () {
         for (let filter in this.filters)
