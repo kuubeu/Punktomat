@@ -84,6 +84,7 @@
                 append-icon="mdi-thumb-up-outline"
                 prepend-icon="mdi-thumb-down-outline"
                 class="mt-8 mb-n8"
+                :value="this.range"
               ></v-range-slider>
             </v-card-text>
 
@@ -281,15 +282,20 @@
         this.getDataFromApi()
       },
       applyFilters () {
-        console.log(this.filters)
+        this.options.data.minPoints = this.range[0]
+        this.options.data.maxPoints = this.range[1]
+        this.getDataFromApi()
       },
       clearFilters () {
         this.options.data.categories = []
+        this.options.data.minPoints = 20
+        this.options.data.maxPoints = 200
+        this.getDataFromApi()
       },
       tableOptionsChanged (op) {
         const options = JSON.parse(JSON.stringify(op))
-        const lim = options.itemsPerPage
 
+        const lim = options.itemsPerPage
         this.options.data.limit = lim
         this.options.data.offset = (options.page - 1) * lim
         this.getDataFromApi()
