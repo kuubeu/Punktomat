@@ -96,33 +96,29 @@ export default {
  var articles_count=0;//amount of articles
 var doc = new jsPDF();
 
-this.selected.forEach(function(line, i){
+this.selected.forEach(function(line, i){//renders firts page
  articles_count=i+1;
-
+var splitTitle = doc.splitTextToSize(line.title, 120);
+var splitSecondTitle = doc.splitTextToSize(line.secondTitle, 120);
     doc.text(15, 15 + (i * 32),
     
         
         "ID: " + line.ID +" "+
         "issn: "+ line.issn + " "+
         "points :"+line.points + " "+
-        "second issn: "+line.secondIssn +"\n "+
-        //"title: " +line.title +"\n "+
+        "second issn: "+line.secondIssn +"\n "
         
-        //splitTitle +
-        "second title: " +line.secondTitle +" "
         );     
-});
 
-
-this.selected.forEach(function(line, i){
-var splitTitle = doc.splitTextToSize(line.title, 120);
-
-
-//var splitTitle = doc.splitTextToSize(line.title, 120);
 doc.line(15,17 + (i * 32),200,17 + (i * 32));
-doc.text(15, 28 + (i * 32), "Title:");
-doc.text(30, 28 + (i * 32), splitTitle);
+doc.text(15, 23 + (i * 32), "Title:");
+doc.text(30, 23 + (i * 32), splitTitle);
+doc.text(15, 41 + (i * 32), "Second title:");
+doc.text(50, 41 + (i * 32), splitSecondTitle);
+
 });
+
+
 var pages_neded=(Math.round(articles_count/9)  +1  );
 console.log(pages_neded);
 
@@ -134,7 +130,8 @@ for(var page=1;page<pages_neded;page++){
 doc.addPage();
 var sliced=this.selected.slice(9*page);
 sliced.forEach(function(line, i){
- 
+var splitSecondTitle = doc.splitTextToSize(line.secondTitle, 140);
+var splitTitle = doc.splitTextToSize(line.title, 180);
 
     doc.text(15, 15 + (i * 32),
     
@@ -142,44 +139,19 @@ sliced.forEach(function(line, i){
         "ID: " + line.ID +" "+
         "issn: "+ line.issn + " "+
         "points :"+line.points + " "+
-        "second issn: "+line.secondIssn +"\n "+
-        //"title: " +line.title +"\n "+
-        
-        //splitTitle +
-        "second title: " +line.secondTitle +" "
-        );  
+        "second issn: "+line.secondIssn +"\n "
+        );     
          
-       var splitTitle = doc.splitTextToSize(line.title, 120);
+      
+       
 
 
-//var splitTitle = doc.splitTextToSize(line.title, 120);
+
 doc.line(15,17 + (i * 32),200,17 + (i * 32));
 doc.text(15, 28 + (i * 32), "Title:");
 doc.text(30, 28 + (i * 32), splitTitle);   
-});
-}
-}
-if(articles_count>9){//rendering second and else pages titles
-
-
-for( page=1;page<pages_neded;page++){
-
-
-
-sliced.forEach(function(line, i){
- 
-
-    
-    
-        
-       var splitTitle = doc.splitTextToSize(line.title, 120);
-
-
-//var splitTitle = doc.splitTextToSize(line.title, 120);
-doc.line(15,17 + (i * 32),200,17 + (i * 32));
-doc.text(15, 28 + (i * 32), "Title:");
-doc.text(30, 28 + (i * 32), splitTitle);
-            
+doc.text(15, 41 + (i * 32), "Second title:");
+doc.text(50, 41 + (i * 32), splitSecondTitle);
 });
 }
 }
@@ -189,7 +161,8 @@ doc.text(30, 28 + (i * 32), splitTitle);
 
 
 
-doc.save('Test.pdf');
+
+doc.save('ChosenArticles.pdf');
 
 
 
