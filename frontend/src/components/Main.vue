@@ -49,7 +49,7 @@
               <v-icon>mdi-filter-outline</v-icon>
             </v-btn>
           </template>
-          <span>Show filters</span>
+          <span>Pokaż filtry</span>
         </v-tooltip>
         <v-dialog
           v-model="filtersDialog"
