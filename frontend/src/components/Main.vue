@@ -1,136 +1,242 @@
 <template>
-  <div class=".container-fluid">
-    <b-navbar variant="faded" type="light">
-      <b-navbar-brand tag="h1" class="mb-0">Punktomat</b-navbar-brand>
-      <md-badge
-        class="md-primary"
-        v-bind:md-content="selected.length"
-        md-dense
-        v-if="selected"
-      >
-        <md-button @click="showModal" class="md-icon-button">
-          <md-icon>article</md-icon>
-        </md-button>
-      </md-badge>
-      <md-icon v-else>article</md-icon>
-    </b-navbar>
-    <div class="row justify-content-md-center">
-      <b-skeleton-table
-        v-if="loading"
-        :rows="10"
-        :columns="5"
-        :table-props="{ striped: true }"
-      ></b-skeleton-table>
-      <Table
-        v-else
-        @clicked="getSelected()"
-        v-bind:selectMode="selectMode"
-        v-bind:loading="loading"
-        v-bind:fields="fields"
-        v-bind:magazines="magazines"
-        v-bind:selected="selected"
-      />
-    </div>
-    <b-modal
-      ref="my-modal"
-      size="xl"
-      hide-footer
-      title="Using Component Methods"
+<v-app>
+    <v-app-bar
+      class="elevation-0"
+      color="white"
+      max-height="64px"
+      height="64px"
     >
-      <div
-        class="d-block text-center"
-        v-for="select in selected"
-        v-bind:key="select.issn"
+      <v-toolbar-title
+        v-if="!$vuetify.breakpoint.xs"
+      >Punktomat</v-toolbar-title>
+
+      <v-spacer v-if="!$vuetify.breakpoint.xs"></v-spacer>
+
+      <v-toolbar
+        dense
+        max-width="720px"
+        class="rounded-lg elevation-2"
       >
-        <p>{{ select }}</p>
-      </div>
-      <b-button class="mt-3" variant="outline-danger" block @click="hideModal"
-        >Zamknij</b-button
+        <v-tooltip 
+          bottom
+          :open-delay="200"
+          transition="fade-transition"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn 
+              icon
+              v-bind="attrs"
+              v-on="on"
+              @click="searchBtnClicked()"
+              class="mr-n3"
+              style="z-index: 1"
+            >
+              <v-icon>mdi-magnify</v-icon>
+            </v-btn>
+          </template>
+          <span>Search</span>
+        </v-tooltip>
+        <v-text-field
+          flat solo
+          clearable
+          single-line
+          hide-details
+          placeholder="Search"
+          v-model="searchText"
+          color="purple darken-1"
+        ></v-text-field>
+        <v-tooltip 
+          bottom
+          :open-delay="200"
+          transition="fade-transition"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn 
+              icon
+              v-bind="attrs"
+              v-on="on"
+              @click.stop="filtersDialog = true"
+              @click="filterBtnClicked()"
+            >
+              <v-icon>mdi-filter-outline</v-icon>
+            </v-btn>
+          </template>
+          <span>Show filters</span>
+        </v-tooltip>
+        <v-dialog
+          v-model="filtersDialog"
+          max-width="720"
+        >
+          <v-card>
+            <v-card-title class="headline">
+              Filter magazines
+            </v-card-title>
+
+            <v-card-text>
+              text 1
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+
+              <v-btn
+                color="purple darken-1"
+                text
+                @click="filtersDialog = false"
+              >Cancel</v-btn>
+
+              <v-btn
+                color="purple darken-1"
+                text
+                @click="filtersDialog = false"
+              >Save</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+      </v-toolbar>
+
+      <v-spacer v-if="!$vuetify.breakpoint.xs"></v-spacer>
+
+      <v-tooltip 
+        bottom
+        :open-delay="200"
+        transition="fade-transition"
       >
-      <b-button class="mt-2" variant="outline-warning" block @
-        >Generuj PDF</b-button
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn 
+            icon
+            v-bind="attrs"
+            v-on="on"
+            class="ml-2"
+          >
+            <!-- <v-icon>mdi-pdf-box</v-icon> -->
+            <v-icon>mdi-file-download-outline</v-icon>
+          </v-btn>
+        </template>
+        <span>Save selected articles as PDF</span>
+      </v-tooltip>
+
+      <v-tooltip 
+        bottom
+        :open-delay="200"
+        transition="fade-transition"
       >
-    </b-modal>
-  </div>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn 
+            icon
+            v-bind="attrs"
+            v-on="on"
+          >
+            <v-icon>mdi-dots-vertical</v-icon>
+          </v-btn>
+        </template>
+        <span>More options</span>
+      </v-tooltip>
+      
+    </v-app-bar>
+
+    <v-main
+      class="overflow-y-auto pa-0"
+    >
+      <Table 
+        v-bind:loading="loading"
+        v-bind:magazines="magazines"
+        v-bind:totalMagazines="totalMagazines"
+        @optionsChanged="tableOptionsChanged"
+        @selectionChanged="tableSelectionChanged"
+      />
+    </v-main>
+    
+  </v-app>
 </template>
 
 <script>
-import axios from "axios";
-import Table from "./Table";
+  import axios from 'axios';
+  import Table from './Table';
 
-export default {
-  name: "Main",
-  components: { Table },
-  data() {
-    return {
-      magazines: null,
-      loading: true,
-      fields: [
-        "ID",
-        "title",
-        "issn",
-        "points",
-        { key: "Categories", label: "Kategorie" },
-      ],
-      selectMode: "multi",
-      selected: [],
-    };
-  },
-  methods: {
-    getSelected: function() {
-      this.selected = [...JSON.parse(localStorage.getItem("selected"))];
+  export default {
+    name: 'Main',
+
+    components: { Table },
+
+    data () {
+      return {
+        loading: true,
+        magazines: [],
+        totalMagazines: 0,
+        selected: [],
+        searchText: "",
+        filtersDialog: false,
+        options: {
+          params: {
+            "categories": [
+              ""
+            ],
+            "order": "title",
+            "orderDirection": "desc",
+            "minPoints": 0,
+            "maxPoints": 200,
+            "limit": 20,
+            "offset": 0,
+            "search": ""
+          }
+        }
+      }
     },
-    showModal() {
-      this.$refs["my-modal"].show();
+
+    mounted () {
+      this.loadCached()
+      this.getDataFromApi()
+      console.log(this.options.params)
     },
-    hideModal() {
-      this.$refs["my-modal"].hide();
+
+    methods: {
+      getDataFromApi () {
+        this.loading = true
+        axios
+          .get(`${process.env.VUE_APP_API_URL}/scienceMagazine`, this.options)
+          .then(response => {
+            this.magazines = response.data.results
+            this.totalMagazines = response.data.total
+            this.loading = false
+          })
+      },
+      loadCached () {
+        if (JSON.parse(localStorage.getItem("selected"))) {
+          this.selected = [...JSON.parse(localStorage.getItem("selected"))]
+        }
+      },
+      searchBtnClicked () {
+        this.searchText = this.searchText.trim().replace(/\s+/g, ' ')
+        // let q = this.searchText.trim().replace(/\s+/g, ' ')
+        if (this.searchText.length > 0)
+          console.log(this.searchText)
+      },
+      saveFilters () {
+        // filter
+      },
+      clearFilters () {
+        // filter
+      },
+      tableOptionsChanged (options) {
+        console.log(options)
+        this.options = options
+        // this.getDataFromApi()
+      },
+      tableSelectionChanged (selected) {
+        this.selected = selected
+      },
     },
-  },
-  mounted() {
-    if (JSON.parse(localStorage.getItem("selected"))) {
-      this.selected = [...JSON.parse(localStorage.getItem("selected"))];
-    }
-    axios.get(`${process.env.VUE_APP_API_URL}/scienceMagazine`).then((response) => {
-      this.magazines = response.data.results;
-      this.total = response.data.total;
-      this.loading = false;
-    });
-  },
-};
+
+  };
 </script>
 
-<style>
-.chip {
-  -webkit-align-items: center;
-  align-items: center;
-  -webkit-border-radius: 15px;
-  border-radius: 15px;
-  -webkit-box-shadow: inset 0 0 0 1px rgb(100 121 143 / 30%);
-  box-shadow: inset 0 0 0 1px rgb(100 121 143 / 30%);
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  color: #5f6368;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: flex;
-  height: 30px;
-  margin-bottom: 4px;
-  margin-right: 8px;
-  /* max-width: 160px; */
-  overflow: hidden;
-  padding: 0 12px;
-  white-space: nowrap;
-}
-.tags {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: flex;
-  min-height: 30px;
-  padding-bottom: 2px;
-  margin-top: 8px;
-  max-width: calc(100vw - 184px);
-  width: 100%;
-  flex-wrap: wrap;
-}
+<style lang="scss">
+  @import '~/src/sass/variables.scss';
+  
+  html {
+    overflow-y: hidden;
+  }
 </style>
+
