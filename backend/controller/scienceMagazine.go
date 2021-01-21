@@ -12,6 +12,8 @@ type Request struct {
 	Categories     []string `json:"categories"`
 	Order          string   `json:"order"`
 	OrderDirection string   `json:"orderDirection"`
+	MinPoints      uint     `json:"minPoints"`
+	MaxPoints      uint     `json:"maxPoints"`
 }
 
 // GetScienceMagazines returns all science magazines
@@ -43,6 +45,14 @@ func GetScienceMagazines(c *fiber.Ctx) error {
 		}
 
 		chain = chain.Order(order)
+	}
+
+	if reqBody.MinPoints != 0 {
+		chain = chain.Where("points >= ?", reqBody.MinPoints)
+	}
+
+	if reqBody.MaxPoints != 0 {
+		chain = chain.Where("points <= ?", reqBody.MaxPoints)
 	}
 
 	for _, category := range reqBody.Categories {
