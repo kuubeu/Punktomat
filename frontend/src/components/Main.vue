@@ -17,13 +17,13 @@
         max-width="720px"
         class="rounded-lg elevation-2"
       >
-        <v-tooltip 
+        <v-tooltip
           bottom
           :open-delay="200"
           transition="fade-transition"
         >
           <template v-slot:activator="{ on, attrs }">
-            <v-btn 
+            <v-btn
               icon
               v-bind="attrs"
               v-on="on"
@@ -44,13 +44,13 @@
           placeholder="Search"
           v-model="searchText"
         ></v-text-field>
-        <v-tooltip 
+        <v-tooltip
           bottom
           :open-delay="200"
           transition="fade-transition"
         >
           <template v-slot:activator="{ on, attrs }">
-            <v-btn 
+            <v-btn
               icon
               v-bind="attrs"
               v-on="on"
@@ -122,13 +122,13 @@
 
       <v-spacer v-if="!$vuetify.breakpoint.xs"></v-spacer>
 
-      <v-tooltip 
+      <v-tooltip
         bottom
         :open-delay="200"
         transition="fade-transition"
       >
         <template v-slot:activator="{ on, attrs }">
-          <v-btn 
+          <v-btn
             icon
             v-bind="attrs"
             v-on="on"
@@ -141,13 +141,13 @@
         <span>Save selected articles as PDF</span>
       </v-tooltip>
 
-      <v-tooltip 
+      <v-tooltip
         bottom
         :open-delay="200"
         transition="fade-transition"
       >
         <template v-slot:activator="{ on, attrs }">
-          <v-btn 
+          <v-btn
             icon
             v-bind="attrs"
             v-on="on"
@@ -157,13 +157,13 @@
         </template>
         <span>More options</span>
       </v-tooltip>
-      
+
     </v-app-bar>
 
     <v-main
       class="overflow-y-auto pa-0"
     >
-      <Table 
+      <Table
         v-bind:loading="loading"
         v-bind:magazines="magazines"
         v-bind:totalMagazines="totalMagazines"
@@ -171,7 +171,7 @@
         @selectionChanged="tableSelectionChanged"
       />
     </v-main>
-    
+
   </v-app>
 </template>
 
@@ -244,11 +244,9 @@
         },
         options: {
           data: {
-            "categories": [
-              ""
-            ],
+            "categories": [],
             "order": "title",
-            "orderDirection": "desc",
+            "orderDirection": "asc",
             "minPoints": 0,
             "maxPoints": 200,
             "limit": 20,
@@ -268,7 +266,7 @@
       getDataFromApi () {
         this.loading = true
         axios
-          .post(`${process.env.VUE_APP_API_URL}/scienceMagazine`, this.options)
+          .post(`${process.env.VUE_APP_API_URL}/scienceMagazine`, this.options.data)
           .then(response => {
             this.magazines = response.data.results
             this.totalMagazines = response.data.total
@@ -313,7 +311,7 @@
 
 <style lang="scss">
   @import '~/src/sass/variables.scss';
-  
+
   html {
     overflow-y: hidden;
   }
