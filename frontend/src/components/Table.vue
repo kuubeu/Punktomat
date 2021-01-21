@@ -1,11 +1,10 @@
 <template>
   <div>
-    <v-skeleton-loader
+    <!-- <v-skeleton-loader
       v-if="loading"
       type="table-thead, table-tbody, table-tfoot"
-    ></v-skeleton-loader>
+    ></v-skeleton-loader> -->
     <v-data-table
-      v-else
       v-model="selected"
       item-key="ID"
       :calculate-widths="false"
@@ -157,25 +156,11 @@
         }
       }
     },
-
-    mounted() {
-      // cache not transfered/implemented yet
-
-      // if (JSON.parse(localStorage.getItem("selected"))) {
-      //   this.selected = [...JSON.parse(localStorage.getItem("selected"))];
-      //   this.selected.map((value) => {
-      //     let i = 0;
-      //     this.magazines.map((valueMagazine) => {
-      //       if (valueMagazine.ID == value.ID) {
-      //         this.$refs.selectableTable.selectRow(i);
-      //       }
-      //       i++;
-      //     });
-      //   });
-      // }
-      // this.$refs.selectableTable.selectRow(2);
-    },
     
+    mounted () {
+      this.loadCachedData()
+    },
+
     methods: {
       getColor (item) {
         if (item > 100) return 'green'
@@ -185,6 +170,11 @@
       searchForArticle (title, issn) {
         let url = `https://scholar.google.com/scholar?q=${encodeURIComponent(title)}+${encodeURIComponent(issn)}`
         window.open(url, '_blank')
+      },
+      loadCachedData () {
+        if (localStorage.getItem('starred'))
+          this.selected = JSON.parse(localStorage.getItem('starred'));
+        console.log(this.selected)
       },
     },
   }

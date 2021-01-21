@@ -43,7 +43,6 @@
           hide-details
           placeholder="Search"
           v-model="searchText"
-          color="purple darken-1"
         ></v-text-field>
         <v-tooltip 
           bottom
@@ -56,7 +55,7 @@
               v-bind="attrs"
               v-on="on"
               @click.stop="filtersDialog = true"
-              @click="filterBtnClicked()"
+              class="mr-n3"
             >
               <v-icon>mdi-filter-outline</v-icon>
             </v-btn>
@@ -65,31 +64,56 @@
         </v-tooltip>
         <v-dialog
           v-model="filtersDialog"
-          max-width="720"
+          max-width="900"
+          @click:outside="applyFilters"
         >
           <v-card>
             <v-card-title class="headline">
-              Filter magazines
+              Filter results
             </v-card-title>
 
+            <v-subheader>Select the range of points</v-subheader>
+
             <v-card-text>
-              text 1
+              <v-range-slider
+                v-model="range"
+                min="20"
+                max="200"
+                step="10"
+                thumb-label="always"
+                append-icon="mdi-thumb-up-outline"
+                prepend-icon="mdi-thumb-down-outline"
+                class="mt-8 mb-n8"
+              ></v-range-slider>
+            </v-card-text>
+
+            <v-subheader>Choose categories</v-subheader>
+
+            <v-card-text>
+              <v-chip-group
+                v-model="filters"
+                column
+                multiple
+                class="mb-n4"
+              >
+                <v-chip
+                  v-for="chip in allCategories"
+                  v-bind:key="chip"
+                  filter
+                  outlined
+                >
+                  {{ chip }}
+                </v-chip>
+              </v-chip-group>
             </v-card-text>
 
             <v-card-actions>
               <v-spacer></v-spacer>
 
               <v-btn
-                color="purple darken-1"
                 text
-                @click="filtersDialog = false"
-              >Cancel</v-btn>
-
-              <v-btn
-                color="purple darken-1"
-                text
-                @click="filtersDialog = false"
-              >Save</v-btn>
+                @click="filtersDialog = false; applyFilters();"
+              >Apply</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -166,8 +190,58 @@
         magazines: [],
         totalMagazines: 0,
         selected: [],
+        range: [20, 200],
+        filters: [],
         searchText: "",
         filtersDialog: false,
+        firstLoad: true,
+        // replace with api later
+        allCategories: {
+          101: "archeologia",
+          102: "filozofia",
+          103: "historia",
+          104: "językoznawstwo",
+          105: "literaturoznawstwo",
+          106: "nauki o kulturze i religii",
+          107: "nauki o sztuce",
+          201: "architektura i urbanistyka",
+          202: "automatyka, elektronika i elektrotechnika",
+          203: "informatyka techniczna i telekomunikacja",
+          204: "inżynieria biomedyczna",
+          205: "inżynieria chemiczna",
+          206: "inżynieria lądowa i transport",
+          207: "inżynieria materiałowa",
+          208: "inżynieria mechaniczna",
+          209: "inżynieria środowiska, górnictwo i energetyka",
+          301: "nauki farmaceutyczne",
+          302: "nauki medyczne",
+          303: "nauki o kulturze fizycznej",
+          304: "nauki o zdrowiu",
+          401: "nauki leśne",
+          402: "rolnictwo i ogrodnictwo",
+          403: "technologia żywności i żywienia",
+          404: "weterynaria",
+          405: "zootechnika i rybactwo",
+          501: "ekonomia i finanse",
+          502: "geografia społeczno-ekonomiczna i gospodarka przestrzenna",
+          503: "nauki o bezpieczeństwie",
+          504: "nauki o komunikacji społecznej i mediach",
+          505: "nauki o polityce i administracji",
+          506: "nauki o zarządzaniu i jakości",
+          507: "nauki prawne",
+          508: "nauki socjologiczne",
+          509: "pedagogika",
+          510: "prawo kanoniczne",
+          511: "psychologia",
+          601: "astronomia",
+          602: "informatyka",
+          603: "matematyka",
+          604: "nauki biologiczne",
+          605: "nauki chemiczne",
+          606: "nauki fizyczne",
+          607: "nauki o Ziemi i środowisku",
+          701: "nauki teologiczne",
+        },
         options: {
           data: {
             "categories": [
@@ -186,7 +260,6 @@
     },
 
     mounted () {
-      this.loadCached()
       this.getDataFromApi()
       console.log(this.options.params)
     },
@@ -202,30 +275,36 @@
             this.loading = false
           })
       },
-      loadCached () {
-        if (JSON.parse(localStorage.getItem("selected"))) {
-          this.selected = [...JSON.parse(localStorage.getItem("selected"))]
-        }
-      },
       searchBtnClicked () {
         this.searchText = this.searchText.trim().replace(/\s+/g, ' ')
         // let q = this.searchText.trim().replace(/\s+/g, ' ')
         if (this.searchText.length > 0)
-          console.log(this.searchText)
+          this.options.data.search = this.searchText
       },
-      saveFilters () {
-        // filter
+      applyFilters () {
+        for (let filter in this.filters)
+          console.log(this.allCategories[filter])
       },
       clearFilters () {
-        // filter
+        // clear filters
       },
-      tableOptionsChanged (options) {
-        console.log(options)
-        this.options = options
-        // this.getDataFromApi()
+      tableOptionsChanged (op) {
+        console.log(op)
+        this.options.data.order = op.order
+        this.options.data.orderDirection = op.orderDirection
+        let lim = op.itemsPerPage
+        this.options.data.limit = lim
+        this.options.data.offset = op.page * lim
+        if(!this.firstLoad) {
+          this.getDataFromApi()
+          this.firstLoad = true
+        } else {
+          this.firstLoad = false
+        }
       },
       tableSelectionChanged (selected) {
         this.selected = selected
+        localStorage.setItem('starred', JSON.stringify(this.selected))
       },
     },
 
