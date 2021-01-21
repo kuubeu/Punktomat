@@ -67,6 +67,8 @@ func GetScienceMagazines(c *fiber.Ctx) error {
 		}
 
 		chain = chain.Order(order)
+	} else {
+		chain = chain.Order("id")
 	}
 
 	chain.Find(&scienceMagazine).Offset(-1).Count(&count)
