@@ -264,7 +264,10 @@ export default {
     },
     tableOptionsChanged(op) {
       const options = JSON.parse(JSON.stringify(op));
-
+      const orderName = options.sortBy[0];
+      this.options.data.order = orderName;
+      if (options.sortDesc[0]) this.options.data.orderDirection = "desc";
+      else this.options.data.orderDirection = "asc";
       const lim = options.itemsPerPage;
       this.options.data.limit = lim;
       this.options.data.offset = (options.page - 1) * lim;

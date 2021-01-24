@@ -107,7 +107,7 @@ export default {
         },
         {
           text: "Tytuł",
-          value: "name",
+          value: "title",
           width: "clamp(300px, 30vw, 600px)",
         },
         {
