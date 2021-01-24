@@ -154,6 +154,7 @@ export default {
 
   data() {
     return {
+      time: null,
       loading: true,
       magazines: [],
       totalMagazines: 0,
@@ -224,7 +225,17 @@ export default {
       },
     };
   },
-
+  watch: {
+    searchText: function() {
+      if (this.time) {
+        clearTimeout(this.time);
+        this.time = null;
+      }
+      this.time = setTimeout(() => {
+        this.searchBtnClicked();
+      }, 700);
+    },
+  },
   mounted() {
     this.getDataFromApi();
     console.log(this.options.params);
