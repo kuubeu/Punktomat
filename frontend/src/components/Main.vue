@@ -58,7 +58,7 @@
         >
           <v-card>
             <v-card-title class="headline">
-              Filter results
+              Filtruj rezultaty
             </v-card-title>
 
             <v-subheader>Wybierz zakres punktowy</v-subheader>
@@ -109,17 +109,32 @@
       </v-toolbar>
 
       <v-spacer v-if="!$vuetify.breakpoint.xs"></v-spacer>
-
-      <v-tooltip bottom :open-delay="200" transition="fade-transition">
+      <v-badge
+        v-if="selected.length > 0"
+        bottom
+        offset-x="15"
+        offset-y="20"
+        color="green"
+        v-bind:content="selected.length"
+      >
+        <v-tooltip bottom :open-delay="200" transition="fade-transition">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon v-bind="attrs" v-on="on" class="ml-2">
+              <!-- <v-icon>mdi-pdf-box</v-icon> -->
+              <v-icon @click="genPDF">mdi-file-download-outline</v-icon>
+            </v-btn>
+          </template>
+          <span>Zapisz ulubione do PDF</span>
+        </v-tooltip>
+      </v-badge>
+      <v-tooltip v-else bottom :open-delay="200" transition="fade-transition">
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon v-bind="attrs" v-on="on" class="ml-2">
-            <!-- <v-icon>mdi-pdf-box</v-icon> -->
-            <v-icon @click="genPDF">mdi-file-download-outline</v-icon>
+            <v-icon>mdi-file-download-outline</v-icon>
           </v-btn>
         </template>
         <span>Zapisz ulubione do PDF</span>
       </v-tooltip>
-
       <v-tooltip bottom :open-delay="200" transition="fade-transition">
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon v-bind="attrs" v-on="on">
