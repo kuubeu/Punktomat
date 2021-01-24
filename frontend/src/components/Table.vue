@@ -72,7 +72,11 @@
               {{ item.issn }}
             </td>
             <td>
-              <v-chip-group max-width="100px" show-arrows>
+              <v-chip-group
+                max-width="100px"
+                show-arrows
+                v-if="item.Categories.length <= 2"
+              >
                 <v-chip
                   v-for="chip in item.Categories"
                   v-bind:key="chip.id"
@@ -80,6 +84,29 @@
                 >
                   {{ chip }}
                 </v-chip>
+              </v-chip-group>
+
+              <v-chip-group max-width="100px" show-arrows v-else>
+                <v-chip
+                  v-for="chip in item.Categories.slice(0, 2)"
+                  v-bind:key="chip.id"
+                  :ripple="false"
+                >
+                  {{ chip }}
+                </v-chip>
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-chip v-bind="attrs" v-on="on">...</v-chip>
+                  </template>
+                  <span>
+                    <p
+                      v-for="chip in item.Categories.slice(2)"
+                      v-bind:key="chip.id"
+                    >
+                      {{ chip }}
+                    </p>
+                  </span>
+                </v-tooltip>
               </v-chip-group>
             </td>
           </tr>
@@ -107,7 +134,7 @@ export default {
         },
         {
           text: "Tytuł",
-          value: "name",
+          value: "title",
           width: "clamp(300px, 30vw, 600px)",
         },
         {
