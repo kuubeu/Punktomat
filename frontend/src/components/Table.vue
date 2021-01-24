@@ -107,7 +107,7 @@ export default {
         },
         {
           text: "Tytuł",
-          value: "title",
+          value: "name",
           width: "clamp(300px, 30vw, 600px)",
         },
         {
@@ -136,12 +136,14 @@ export default {
     options: {
       handler() {
         this.$emit("optionsChanged", this.options);
+        // console.log(this.options)
       },
       deep: true,
     },
     selected: {
       handler() {
         this.$emit("selectionChanged", this.selected);
+        // console.log(this.selected)
       },
     },
   },
