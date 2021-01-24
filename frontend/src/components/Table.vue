@@ -72,11 +72,7 @@
               {{ item.issn }}
             </td>
             <td>
-              <v-chip-group
-                max-width="100px"
-                show-arrows
-                v-if="item.Categories.length <= 2"
-              >
+              <v-chip-group v-if="item.Categories.length <= 2">
                 <v-chip
                   v-for="chip in item.Categories"
                   v-bind:key="chip.id"
@@ -86,7 +82,7 @@
                 </v-chip>
               </v-chip-group>
 
-              <v-chip-group max-width="100px" show-arrows v-else>
+              <v-chip-group v-else>
                 <v-chip
                   v-for="chip in item.Categories.slice(0, 2)"
                   v-bind:key="chip.id"
@@ -94,9 +90,19 @@
                 >
                   {{ chip }}
                 </v-chip>
-                <v-tooltip bottom>
+                <v-tooltip
+                  bottom
+                  :open-delay="200"
+                  transition="fade-transition"
+                >
                   <template v-slot:activator="{ on, attrs }">
-                    <v-chip v-bind="attrs" v-on="on">...</v-chip>
+                    <v-chip
+                      v-bind="attrs"
+                      v-on="on"
+                      :ripple="false"
+                    >
+                      <v-icon>mdi-dots-horizontal</v-icon>
+                    </v-chip>
                   </template>
                   <span>
                     <p
@@ -199,3 +205,8 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+  .v-application p { margin-bottom: 2px }
+  .v-application p:last-of-type { margin-bottom: 0 }
+</style>
