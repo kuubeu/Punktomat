@@ -3,7 +3,6 @@ package controller
 import (
 	"punktomat/database"
 	"punktomat/model"
-
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -60,8 +59,14 @@ func GetScienceMagazines(c *fiber.Ctx) error {
 	}
 
 	if reqBody.Order != "" {
-		order := "upper(" + reqBody.Order + ")"
-
+		var order string
+		if reqBody.Order == "title" {
+			order += "upper(" + reqBody.Order + ")"
+		} else {
+			fmt.Print("points")
+			order += reqBody.Order
+		}
+		
 		if reqBody.OrderDirection != "" {
 			order += " " + reqBody.OrderDirection
 		}
