@@ -60,8 +60,13 @@ func GetScienceMagazines(c *fiber.Ctx) error {
 	}
 
 	if reqBody.Order != "" {
-		order := "upper(" + reqBody.Order + ")"
-
+		order := ""
+		if reqBody.Order == "points" {
+			order += reqBody.Order
+		} else {
+			order += "upper(" + reqBody.Order + ")"
+		}
+		
 		if reqBody.OrderDirection != "" {
 			order += " " + reqBody.OrderDirection
 		}
