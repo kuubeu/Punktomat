@@ -112,24 +112,39 @@
       </v-toolbar>
 
       <v-spacer v-if="!$vuetify.breakpoint.xs"></v-spacer>
-      <v-badge
-        v-if="selected.length > 0"
-        bottom
-        offset-x="15"
-        offset-y="20"
-        color="green"
-        v-bind:content="selected.length"
-      >
-        <v-tooltip bottom :open-delay="200" transition="fade-transition">
-          <template v-slot:activator="{ on, attrs }">
+      <v-dialog v-model="selectDialog" width="500" v-if="selected.length > 0">
+        <template v-slot:activator="{ on, attrs }">
+          <v-badge
+            bottom
+            offset-x="15"
+            offset-y="20"
+            color="green"
+            v-bind:content="selected.length"
+          >
             <v-btn icon v-bind="attrs" v-on="on" class="ml-2">
-              <!-- <v-icon>mdi-pdf-box</v-icon> -->
-              <v-icon @click="genPDF">mdi-file-download-outline</v-icon>
+              <v-icon>mdi-file-download-outline</v-icon>
             </v-btn>
-          </template>
-          <span>Zapisz ulubione do PDF</span>
-        </v-tooltip>
-      </v-badge>
+          </v-badge>
+        </template>
+
+        <v-card>
+          <v-card-title class="headline grey lighten-2">
+            Wybrane czasopisma
+          </v-card-title>
+
+          <v-divider></v-divider>
+
+          <v-card-actions>
+            <v-btn text @click="selectDialog = false">
+              Zamknij
+            </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" text @click="selectDialog = false">
+              Zapisz do PDF
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       <v-tooltip v-else bottom :open-delay="200" transition="fade-transition">
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon v-bind="attrs" v-on="on" class="ml-2">
@@ -172,6 +187,7 @@ export default {
 
   data() {
     return {
+      selectDialog: false,
       time: null,
       loading: true,
       magazines: [],
@@ -256,7 +272,6 @@ export default {
   },
   mounted() {
     this.getDataFromApi();
-    console.log(this.options.params);
   },
 
   methods: {
@@ -288,7 +303,6 @@ export default {
           return this.allCategories[value];
         });
       else this.options.data.categories = [];
-      console.log(this.options.data);
       this.getDataFromApi();
     },
     clearFilters() {
