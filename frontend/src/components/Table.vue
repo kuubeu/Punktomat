@@ -1,9 +1,5 @@
 <template>
   <div>
-    <!-- <v-skeleton-loader
-      v-if="loading"
-      type="table-thead, table-tbody, table-tfoot"
-    ></v-skeleton-loader> -->
     <v-data-table
       v-model="selected"
       item-key="ID"
