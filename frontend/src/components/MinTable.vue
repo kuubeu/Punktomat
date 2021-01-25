@@ -5,11 +5,9 @@
     class="elevation-1"
   >
     <template v-slot:[`item.points`]="{ item }">
-      <v-layout justify-center>
-        <v-chip :color="getColor(item.points)" dark>
-          {{ item.points }}
-        </v-chip>
-      </v-layout>
+      <v-chip :color="getColor(item.points)" dark>
+        {{ item.points }}
+      </v-chip>
     </template>
     <template v-slot:[`item.delete`]="{ item }">
       <v-layout justify-center>
@@ -17,6 +15,14 @@
           mdi-delete
         </v-icon>
       </v-layout>
+    </template>
+    <template v-slot:[`header.delete`]>
+      <div>
+        <v-spacer></v-spacer>
+        <v-btn color="error" @click="deleteAllItems" depressed>
+          Wyczyść listę
+        </v-btn>
+      </div>
     </template>
   </v-data-table>
 </template>
@@ -33,6 +39,10 @@ export default {
     deleteItem(item) {
       const index = this.selectedMagazines.indexOf(item);
       this.selectedMagazines.splice(index, 1);
+    },
+    deleteAllItems() {
+      this.selectedMagazines.splice(0, this.selectedMagazines.length);
+      console.log("zdarzenie");
     },
   },
   data() {

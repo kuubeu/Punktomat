@@ -133,7 +133,6 @@
           </v-card-title>
           <MinTable v-bind:selectedMagazines="selected" />
           <v-divider></v-divider>
-
           <v-card-actions>
             <v-btn text @click="selectDialog = false">
               Zamknij
