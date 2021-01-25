@@ -139,7 +139,14 @@
               Zamknij
             </v-btn>
             <v-spacer></v-spacer>
-            <v-btn color="primary" text @click="selectDialog = false">
+            <v-btn
+              color="primary"
+              text
+              @click="
+                selectDialog = false;
+                genPDF();
+              "
+            >
               Zapisz do PDF
             </v-btn>
           </v-card-actions>
@@ -269,6 +276,9 @@ export default {
       this.time = setTimeout(() => {
         this.searchBtnClicked();
       }, 700);
+    },
+    selected: function() {
+      if (this.selected == 0) this.selectDialog = false;
     },
   },
   mounted() {

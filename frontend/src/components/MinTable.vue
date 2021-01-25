@@ -31,7 +31,8 @@ export default {
       else return "red";
     },
     deleteItem(item) {
-      console.log(item);
+      const index = this.selectedMagazines.indexOf(item);
+      this.selectedMagazines.splice(index, 1);
     },
   },
   data() {
