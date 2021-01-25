@@ -185,8 +185,9 @@
 import axios from "axios";
 import Table from "./Table";
 import MinTable from "./MinTable";
-import { jsPDF } from "jspdf";
-
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 export default {
   name: "Main",
 
@@ -356,71 +357,40 @@ export default {
       localStorage.setItem("starred", JSON.stringify(this.selected));
     },
     genPDF() {
-      var articles_count = 0; //amount of articles
-      var doc = new jsPDF();
-      this.selected.forEach(function(line, i) {
-        //renders firts page
-        articles_count = i + 1;
-        var splitTitle = doc.splitTextToSize(line.title, 120);
-        //var splitSecondTitle = doc.splitTextToSize(line.secondTitle, 120);
-        doc.text(
-          15,
-          15 + i * 32,
-
-          "ID: " +
-            line.ID +
-            " " +
-            "issn: " +
-            line.issn +
-            " " +
-            "points :" +
-            line.points +
-            " " +
-            "second issn: " +
-            line.secondIssn +
-            "\n "
-        );
-        doc.line(15, 17 + i * 32, 200, 17 + i * 32);
-        doc.text(15, 23 + i * 32, "Title:");
-        doc.text(30, 23 + i * 32, splitTitle);
-        doc.text(15, 41 + i * 32, "");
-        doc.text(50, 41 + i * 32, "");
+      const table = [];
+      this.selected.forEach((element) => {
+        table.push([
+          element.title,
+          element.points,
+          element.issn,
+          element["e-issn"],
+          element.secondIssn,
+          element["secondE-issn"],
+        ]);
       });
-      var pages_neded = Math.round(articles_count / 9) + 1;
-      if (articles_count > 9) {
-        //rendering second and else pages
-        for (var page = 1; page < pages_neded; page++) {
-          doc.addPage();
-          var sliced = this.selected.slice(9 * page);
-          sliced.forEach(function(line, i) {
-            // var splitSecondTitle = doc.splitTextToSize(line.secondTitle, 140);
-            var splitTitle = doc.splitTextToSize(line.title, 180);
-            doc.text(
-              15,
-              15 + i * 32,
-
-              "ID: " +
-                line.ID +
-                " " +
-                "issn: " +
-                line.issn +
-                " " +
-                "points :" +
-                line.points +
-                " " +
-                "second issn: " +
-                line.secondIssn +
-                "\n "
-            );
-            doc.line(15, 17 + i * 32, 200, 17 + i * 32);
-            doc.text(15, 28 + i * 32, "Title:");
-            doc.text(30, 28 + i * 32, splitTitle);
-            doc.text(15, 41 + i * 32, "");
-            doc.text(50, 41 + i * 32, "");
-          });
-        }
-      }
-      doc.save("ChosenArticles.pdf");
+      var docDefinition = {
+        content: [
+          {
+            layout: "lightHorizontalLines",
+            table: {
+              headerRows: 1,
+              widths: ["*", "auto", "auto", "auto", "auto", "auto"],
+              body: [
+                [
+                  "TYTUŁ",
+                  "PUNKTY",
+                  "ISSN",
+                  "E-ISSN",
+                  "DRUGI ISSN",
+                  "DRUGI E-ISSN",
+                ],
+                ...table,
+              ],
+            },
+          },
+        ],
+      };
+      pdfMake.createPdf(docDefinition).download("Lista");
     },
   },
 };
