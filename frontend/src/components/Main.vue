@@ -112,7 +112,7 @@
       </v-toolbar>
 
       <v-spacer v-if="!$vuetify.breakpoint.xs"></v-spacer>
-      <v-dialog v-model="selectDialog" width="500" v-if="selected.length > 0">
+      <v-dialog v-model="selectDialog" width="650" v-if="selected.length > 0">
         <template v-slot:activator="{ on, attrs }">
           <v-badge
             bottom
@@ -131,15 +131,21 @@
           <v-card-title class="headline grey lighten-2">
             Wybrane czasopisma
           </v-card-title>
-
+          <MinTable v-bind:selectedMagazines="selected" />
           <v-divider></v-divider>
-
           <v-card-actions>
             <v-btn text @click="selectDialog = false">
               Zamknij
             </v-btn>
             <v-spacer></v-spacer>
-            <v-btn color="primary" text @click="selectDialog = false">
+            <v-btn
+              color="primary"
+              text
+              @click="
+                selectDialog = false;
+                genPDF();
+              "
+            >
               Zapisz do PDF
             </v-btn>
           </v-card-actions>
@@ -178,12 +184,13 @@
 <script>
 import axios from "axios";
 import Table from "./Table";
+import MinTable from "./MinTable";
 import { jsPDF } from "jspdf";
 
 export default {
   name: "Main",
 
-  components: { Table },
+  components: { Table, MinTable },
 
   data() {
     return {
@@ -269,8 +276,25 @@ export default {
         this.searchBtnClicked();
       }, 700);
     },
+    selected: function() {
+      if (this.selected == 0) this.selectDialog = false;
+    },
   },
   mounted() {
+    if (localStorage.getItem("options") !== null) {
+      this.options.data = JSON.parse(localStorage.getItem("options"));
+      this.range[0] = this.options.data.minPoints;
+      this.range[1] = this.options.data.maxPoints;
+      if (this.options.data.categories.length != 0) {
+        this.filters = this.options.data.categories.map((value) => {
+          return this.allCategories.indexOf(value);
+        });
+      }
+    }
+    if (localStorage.getItem("search") !== null) {
+      this.options.data.search = localStorage.getItem("search");
+      this.searchText = localStorage.getItem("search");
+    }
     this.getDataFromApi();
   },
 
@@ -289,28 +313,30 @@ export default {
         });
     },
     searchBtnClicked() {
+      if (this.searchText == null) this.searchText = "";
       this.searchText = this.searchText.trim().replace(/\s+/g, " ");
-      // let q = this.searchText.trim().replace(/\s+/g, ' ')
       this.options.data.offset = 0;
       this.options.data.search = this.searchText;
+      localStorage.setItem("search", this.searchText);
       this.getDataFromApi();
     },
     applyFilters() {
       this.options.data.minPoints = this.range[0];
       this.options.data.maxPoints = this.range[1];
-      if (this.filters.lenght != 0)
+      if (this.filters.length != 0)
         this.options.data.categories = this.filters.map((value) => {
           return this.allCategories[value];
         });
       else this.options.data.categories = [];
+      localStorage.setItem("options", JSON.stringify(this.options.data));
       this.getDataFromApi();
     },
     clearFilters() {
       this.options.data.categories = [];
       this.options.data.minPoints = 20;
       this.options.data.maxPoints = 200;
-      this.minPoints = 20;
-      this.maxPoints = 200;
+      this.range[0] = 20;
+      this.range[1] = 200;
       this.filters = [];
       this.getDataFromApi();
     },

@@ -22,6 +22,7 @@
         <v-layout class="mt-n3 mb-n4">
           <v-simple-checkbox
             off-icon="mdi-star-outline"
+            :ripple="false"
             on-icon="mdi-star"
             color="amber"
             :value="isSelected"
