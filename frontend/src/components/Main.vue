@@ -93,10 +93,13 @@
             </v-card-text>
 
             <v-card-actions>
+              <v-btn text @click="clearFilters">Wyczyść</v-btn>
+
               <v-spacer></v-spacer>
 
               <v-btn
                 text
+                color="primary"
                 @click="
                   filtersDialog = false;
                   applyFilters();
@@ -292,6 +295,9 @@ export default {
       this.options.data.categories = [];
       this.options.data.minPoints = 20;
       this.options.data.maxPoints = 200;
+      this.minPoints = 20;
+      this.maxPoints = 200;
+      this.filters = [];
       this.getDataFromApi();
     },
     tableOptionsChanged(op) {
