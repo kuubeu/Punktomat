@@ -1,9 +1,5 @@
 <template>
   <div>
-    <!-- <v-skeleton-loader
-      v-if="loading"
-      type="table-thead, table-tbody, table-tfoot"
-    ></v-skeleton-loader> -->
     <v-data-table
       v-model="selected"
       item-key="ID"
@@ -22,101 +18,83 @@
       height="calc(100vh - 124px)"
       class="elevation-0 pa-0 ma-0"
     >
-      <template v-slot:body="{ items }">
-        <tbody>
-          <tr v-for="item in items" :key="item.ID">
-            <td>
-              <v-layout class="mt-n3 mb-n4">
-                <v-checkbox
-                  v-model="selected"
-                  :value="item"
-                  off-icon="mdi-star-outline"
-                  on-icon="mdi-star"
-                  color="amber"
-                >
-                </v-checkbox>
-              </v-layout>
-            </td>
-            <td>
-              <v-tooltip
-                right
-                nudge-left="8px"
-                nudge-bottom="24px"
-                :open-delay="200"
-                transition="fade-transition"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    icon
-                    v-bind="attrs"
-                    v-on="on"
-                    @click="searchForArticle(item.title, item.issn)"
-                  >
-                    <v-icon>mdi-text-box-search-outline</v-icon>
-                  </v-btn>
-                </template>
-                <span>Wyszukaj w google</span>
-              </v-tooltip>
-            </td>
-            <td class="pt-2 pb-2">
-              {{ item.title }}
-            </td>
-            <td>
-              <v-layout justify-center>
-                <v-chip :color="getColor(item.points)" dark>
-                  {{ item.points }}
-                </v-chip>
-              </v-layout>
-            </td>
-            <td>
-              {{ item.issn }}
-            </td>
-            <td>
-              <v-chip-group v-if="item.Categories.length <= 2">
-                <v-chip
-                  v-for="chip in item.Categories"
-                  v-bind:key="chip.id"
-                  :ripple="false"
-                >
-                  {{ chip }}
-                </v-chip>
-              </v-chip-group>
+      <template v-slot:[`item.data-table-select`]="{ isSelected, select }">
+        <v-layout class="mt-n3 mb-n4">
+          <v-simple-checkbox
+            off-icon="mdi-star-outline"
+            on-icon="mdi-star"
+            color="amber"
+            :value="isSelected"
+            @input="select($event)"
+          ></v-simple-checkbox>
+        </v-layout>
+      </template>
+      <template v-slot:[`item.search`]="{ item }">
+        <v-tooltip
+          right
+          nudge-left="8px"
+          nudge-bottom="24px"
+          :open-delay="200"
+          transition="fade-transition"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              icon
+              v-bind="attrs"
+              v-on="on"
+              @click="searchForArticle(item.title, item.issn)"
+            >
+              <v-icon>mdi-text-box-search-outline</v-icon>
+            </v-btn>
+          </template>
+          <span>Wyszukaj w google</span>
+        </v-tooltip>
+      </template>
+      <template v-slot:[`item.title`]="{ item }">
+        {{ item.title }}
+      </template>
+      <template v-slot:[`item.points`]="{ item }">
+        <v-layout justify-center>
+          <v-chip :color="getColor(item.points)" dark>
+            {{ item.points }}
+          </v-chip>
+        </v-layout>
+      </template>
+      <template v-slot:[`item.issn`]="{ item }">
+        {{ item.issn }}
+      </template>
+      <template v-slot:[`item.chips`]="{ item }">
+        <v-chip-group v-if="item.Categories.length <= 2">
+          <v-chip
+            v-for="chip in item.Categories"
+            v-bind:key="chip.id"
+            :ripple="false"
+          >
+            {{ chip }}
+          </v-chip>
+        </v-chip-group>
 
-              <v-chip-group v-else>
-                <v-chip
-                  v-for="chip in item.Categories.slice(0, 2)"
-                  v-bind:key="chip.id"
-                  :ripple="false"
-                >
-                  {{ chip }}
-                </v-chip>
-                <v-tooltip
-                  bottom
-                  :open-delay="200"
-                  transition="fade-transition"
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-chip
-                      v-bind="attrs"
-                      v-on="on"
-                      :ripple="false"
-                    >
-                      <v-icon>mdi-dots-horizontal</v-icon>
-                    </v-chip>
-                  </template>
-                  <span>
-                    <p
-                      v-for="chip in item.Categories.slice(2)"
-                      v-bind:key="chip.id"
-                    >
-                      {{ chip }}
-                    </p>
-                  </span>
-                </v-tooltip>
-              </v-chip-group>
-            </td>
-          </tr>
-        </tbody>
+        <v-chip-group v-else>
+          <v-chip
+            v-for="chip in item.Categories.slice(0, 2)"
+            v-bind:key="chip.id"
+            :ripple="false"
+          >
+            {{ chip }}
+          </v-chip>
+          <v-tooltip bottom :open-delay="200" transition="fade-transition">
+            <template v-slot:activator="{ on, attrs }">
+              <v-chip v-bind="attrs" v-on="on" :ripple="false">
+                <v-icon>mdi-dots-horizontal</v-icon>
+              </v-chip>
+            </template>
+            <span>
+              <p v-for="chip in item.Categories.slice(2)" v-bind:key="chip.id">
+                {{ chip }}
+              </p>
+            </span>
+          </v-tooltip>
+        </v-chip-group>
       </template>
     </v-data-table>
   </div>
@@ -169,14 +147,12 @@ export default {
     options: {
       handler() {
         this.$emit("optionsChanged", this.options);
-        // console.log(this.options)
       },
       deep: true,
     },
     selected: {
       handler() {
         this.$emit("selectionChanged", this.selected);
-        // console.log(this.selected)
       },
     },
   },
@@ -200,13 +176,16 @@ export default {
     loadCachedData() {
       if (localStorage.getItem("starred"))
         this.selected = JSON.parse(localStorage.getItem("starred"));
-      console.log(this.selected);
     },
   },
 };
 </script>
 
 <style scoped>
-  .v-application p { margin-bottom: 2px }
-  .v-application p:last-of-type { margin-bottom: 0 }
+.v-application p {
+  margin-bottom: 2px;
+}
+.v-application p:last-of-type {
+  margin-bottom: 0;
+}
 </style>
