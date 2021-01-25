@@ -112,7 +112,7 @@
       </v-toolbar>
 
       <v-spacer v-if="!$vuetify.breakpoint.xs"></v-spacer>
-      <v-dialog v-model="selectDialog" width="500" v-if="selected.length > 0">
+      <v-dialog v-model="selectDialog" width="650" v-if="selected.length > 0">
         <template v-slot:activator="{ on, attrs }">
           <v-badge
             bottom
@@ -131,7 +131,7 @@
           <v-card-title class="headline grey lighten-2">
             Wybrane czasopisma
           </v-card-title>
-
+          <MinTable v-bind:selectedMagazines="selected" />
           <v-divider></v-divider>
 
           <v-card-actions>
@@ -178,12 +178,13 @@
 <script>
 import axios from "axios";
 import Table from "./Table";
+import MinTable from "./MinTable";
 import { jsPDF } from "jspdf";
 
 export default {
   name: "Main",
 
-  components: { Table },
+  components: { Table, MinTable },
 
   data() {
     return {
