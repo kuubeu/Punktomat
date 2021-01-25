@@ -299,6 +299,7 @@ export default {
         });
     },
     searchBtnClicked() {
+      if (this.searchText == null) this.searchText = "";
       this.searchText = this.searchText.trim().replace(/\s+/g, " ");
       // let q = this.searchText.trim().replace(/\s+/g, ' ')
       this.options.data.offset = 0;
