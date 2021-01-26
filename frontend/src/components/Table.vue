@@ -26,6 +26,7 @@
             color="amber"
             :value="isSelected"
             @input="select($event)"
+            :ripple="false"
           ></v-simple-checkbox>
         </v-layout>
       </template>
@@ -197,6 +198,7 @@ export default {
 .v-application p:last-of-type {
   margin-bottom: 0;
 }
+/* small screen optimization */
 @media only screen and (max-width: 480px) {
   .v-data-footer__select .v-select {
     margin: 13px 0 13px 18px !important;

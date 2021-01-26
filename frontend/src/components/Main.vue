@@ -80,7 +80,12 @@
             <v-subheader>Wybierz kategorie</v-subheader>
 
             <v-card-text>
-              <v-chip-group v-model="filters" column multiple class="mb-n4">
+              <v-chip-group
+                v-model="filters"
+                column
+                multiple
+                class="mb-n4"
+              >
                 <v-chip
                   v-for="chip in allCategories"
                   v-bind:key="chip"
@@ -400,5 +405,21 @@ export default {
 
 html {
   overflow-y: hidden;
+}
+.v-subheader {
+  margin: 0 8px;
+}
+/* touch chip scrolling */
+.v-slide-group__wrapper {
+  touch-action: unset;
+}
+/* small screen optimization */
+@media only screen and (max-width: 380px) {
+  .v-dialog:not(.v-dialog--fullscreen) {
+    margin: 0;
+  }
+  .v-dialog, .v-dialog .v-sheet.v-card {
+    border-radius: 0 !important;
+  }
 }
 </style>

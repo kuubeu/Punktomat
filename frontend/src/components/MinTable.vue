@@ -4,6 +4,11 @@
     :headers="headers"
     class="elevation-0"
   >
+    <template v-slot:[`item.title`]="{ item }">
+      <v-layout class="mt-2 mb-2">
+        {{ item.title }}
+      </v-layout>
+    </template>
     <template v-slot:[`item.points`]="{ item }">
       <v-chip :color="getColor(item.points)" dark>
         {{ item.points }}
