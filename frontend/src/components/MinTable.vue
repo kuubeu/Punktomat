@@ -2,7 +2,7 @@
   <v-data-table
     :items="selectedMagazines"
     :headers="headers"
-    class="elevation-1"
+    class="elevation-0"
   >
     <template v-slot:[`item.points`]="{ item }">
       <v-chip :color="getColor(item.points)" dark>
@@ -11,18 +11,33 @@
     </template>
     <template v-slot:[`item.delete`]="{ item }">
       <v-layout justify-center>
-        <v-icon small @click="deleteItem(item)">
+        <v-icon @click="deleteItem(item)">
           mdi-delete
         </v-icon>
       </v-layout>
     </template>
     <template v-slot:[`header.delete`]>
-      <div>
-        <v-spacer></v-spacer>
-        <v-btn color="error" @click="deleteAllItems" depressed>
-          Wyczyść listę
-        </v-btn>
-      </div>
+      <v-tooltip
+        left
+        :open-delay="200"
+        transition="fade-transition"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            v-bind="attrs"
+            v-on="on"
+            color="error"
+            @click="deleteAllItems"
+            depressed
+            icon
+          >
+            <v-icon>
+              mdi-delete-alert
+            </v-icon>
+          </v-btn>
+        </template>
+        <span>Wyczyść listę</span>
+      </v-tooltip>
     </template>
   </v-data-table>
 </template>
@@ -54,13 +69,13 @@ export default {
           text: "Tytuł",
           value: "title",
           sortable: false,
-          width: "clamp(100px, 30vw, 250px)",
         },
         {
           text: "Punkty",
           value: "points",
           sortable: false,
-          width: "88px",
+          width: "80px",
+          align: "center",
         },
         {
           text: "ISSN",
@@ -68,7 +83,13 @@ export default {
           sortable: false,
           width: "100px",
         },
-        { text: "Usuń", value: "delete", sortable: false, width: "20px" },
+        {
+          text: "Usuń",
+          value: "delete",
+          sortable: false,
+          width: "20px",
+          align: "right",
+        },
       ],
     };
   },

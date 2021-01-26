@@ -22,7 +22,6 @@
         <v-layout class="mt-n3 mb-n4">
           <v-simple-checkbox
             off-icon="mdi-star-outline"
-            :ripple="false"
             on-icon="mdi-star"
             color="amber"
             :value="isSelected"
@@ -52,7 +51,9 @@
         </v-tooltip>
       </template>
       <template v-slot:[`item.title`]="{ item }">
-        {{ item.title }}
+        <v-layout class="mt-2 mb-2">
+          {{ item.title }}
+        </v-layout>
       </template>
       <template v-slot:[`item.points`]="{ item }">
         <v-layout justify-center>
@@ -65,7 +66,10 @@
         {{ item.issn }}
       </template>
       <template v-slot:[`item.chips`]="{ item }">
-        <v-chip-group v-if="item.Categories.length <= 2">
+        <v-chip-group
+          v-if="item.Categories.length <= 2"
+          class="mr-n2"
+        >
           <v-chip
             v-for="chip in item.Categories"
             v-bind:key="chip.id"
@@ -75,7 +79,7 @@
           </v-chip>
         </v-chip-group>
 
-        <v-chip-group v-else>
+        <v-chip-group v-else class="mr-n2">
           <v-chip
             v-for="chip in item.Categories.slice(0, 2)"
             v-bind:key="chip.id"
@@ -85,7 +89,11 @@
           </v-chip>
           <v-tooltip bottom :open-delay="200" transition="fade-transition">
             <template v-slot:activator="{ on, attrs }">
-              <v-chip v-bind="attrs" v-on="on" :ripple="false">
+              <v-chip
+                v-bind="attrs"
+                v-on="on"
+                :ripple="false"
+              >
                 <v-icon>mdi-dots-horizontal</v-icon>
               </v-chip>
             </template>
@@ -114,7 +122,7 @@ export default {
           text: "Wyszukaj",
           value: "search",
           sortable: false,
-          align: "end",
+          align: "center",
           width: "70px",
         },
         {
@@ -182,11 +190,27 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .v-application p {
   margin-bottom: 2px;
 }
 .v-application p:last-of-type {
   margin-bottom: 0;
+}
+@media only screen and (max-width: 480px) {
+  .v-data-footer__select .v-select {
+    margin: 13px 0 13px 18px !important;
+  }
+  .v-data-footer__pagination {
+    margin: 0 24px 0 16px !important;
+  }
+  .v-data-footer {
+    margin-right: 0 !important;
+  }
+}
+@media only screen and (max-width: 380px) {
+  .v-data-footer__select {
+    font-size: 0;
+  }
 }
 </style>

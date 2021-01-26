@@ -118,7 +118,6 @@
             bottom
             offset-x="15"
             offset-y="20"
-            color="green"
             v-bind:content="selected.length"
           >
             <v-btn icon v-bind="attrs" v-on="on" class="ml-2">
@@ -128,7 +127,7 @@
         </template>
 
         <v-card>
-          <v-card-title class="headline grey lighten-2">
+          <v-card-title class="headline">
             Wybrane czasopisma
           </v-card-title>
           <MinTable v-bind:selectedMagazines="selected" />
