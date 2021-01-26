@@ -65,7 +65,7 @@
         </v-layout>
       </template>
       <template v-slot:[`item.issn`]="{ item }">
-        {{ secondOrFirst(item.issn, item["secondE-issn"]) }}
+        {{ secondOrFirst(item.issn, item.secondIssn) || "brak" }}
       </template>
       <template v-slot:[`item.chips`]="{ item }">
         <v-chip-group
@@ -170,7 +170,7 @@ export default {
 
   methods: {
     secondOrFirst(first, second) {
-      if (first) return first;
+      if (first.length != 0) return first;
       else return second;
     },
     getColor(item) {
