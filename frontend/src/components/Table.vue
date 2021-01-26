@@ -59,7 +59,7 @@
       </template>
       <template v-slot:[`item.points`]="{ item }">
         <v-layout justify-center>
-          <v-chip :color="getColor(item.points)" dark>
+          <v-chip :color="getColor(item.points)">
             {{ item.points }}
           </v-chip>
         </v-layout>
@@ -174,9 +174,9 @@ export default {
 
   methods: {
     getColor(item) {
-      if (item > 100) return "green";
-      else if (item > 50) return "orange";
-      else return "red";
+      if (item > 100) return "green lighten-2";
+      else if (item > 50) return "lime lighten-2";
+      else return "orange lighten-2";
     },
     searchForArticle(title, issn) {
       let url = `https://scholar.google.com/scholar?q=${encodeURIComponent(

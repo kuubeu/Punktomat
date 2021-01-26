@@ -10,7 +10,7 @@
       </v-layout>
     </template>
     <template v-slot:[`item.points`]="{ item }">
-      <v-chip :color="getColor(item.points)" dark>
+      <v-chip :color="getColor(item.points)">
         {{ item.points }}
       </v-chip>
     </template>
@@ -52,9 +52,9 @@ export default {
   props: ["selectedMagazines"],
   methods: {
     getColor(item) {
-      if (item > 100) return "green";
-      else if (item > 50) return "orange";
-      else return "red";
+      if (item > 100) return "green lighten-2";
+      else if (item > 50) return "lime lighten-2";
+      else return "orange lighten-2";
     },
     deleteItem(item) {
       const index = this.selectedMagazines.indexOf(item);
