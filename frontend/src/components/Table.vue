@@ -15,6 +15,7 @@
       show-select
       fixed-header
       fixed-footer
+      @update:page="scrollUp"
       height="calc(100vh - 124px)"
       class="elevation-0 pa-0 ma-0 data-table"
     >
