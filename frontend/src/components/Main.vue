@@ -152,7 +152,7 @@
                 genPDF();
               "
             >
-              Zapisz do PDF
+              <v-icon left>mdi-tray-arrow-down</v-icon> Zapisz do PDF
             </v-btn>
           </v-card-actions>
         </v-card>
