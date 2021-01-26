@@ -91,16 +91,10 @@ func main() {
 	initDatabase()
 	setupRoutes(app)
 
-	// var scienceMagazine []model.ScienceMagazine
-	// if err := database.DBConn.First(&scienceMagazine).Error; err != nil {
-	// 	initModel("./wykaz.xlsx", 1)
-	// }
-
-	app.Get("/initdb", func(c *fiber.Ctx) error {
+	var scienceMagazine []model.ScienceMagazine
+	if err := database.DBConn.First(&scienceMagazine).Error; err != nil {
 		initModel("./wykaz.xlsx", 1)
-
-		return c.SendString("initDB progress")
-	})
+	}
 
 	port := os.Getenv("PORT")
 	if port == "" {
