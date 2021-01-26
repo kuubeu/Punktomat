@@ -70,6 +70,7 @@ func initModel(filename string, labelsRow int) {
 			Categories:  pq.StringArray(categories),
 		}
 		database.DBConn.Create(&magazine)
+		fmt.Println(magazine.Title + " ADDED")
 	}
 
 	fmt.Println("Magazines successfully loaded")
@@ -90,10 +91,16 @@ func main() {
 	initDatabase()
 	setupRoutes(app)
 
-	var scienceMagazine []model.ScienceMagazine
-	if err := database.DBConn.First(&scienceMagazine).Error; err != nil {
+	// var scienceMagazine []model.ScienceMagazine
+	// if err := database.DBConn.First(&scienceMagazine).Error; err != nil {
+	// 	initModel("./wykaz.xlsx", 1)
+	// }
+
+	app.Get("/initdb", func(c *fiber.Ctx) error {
 		initModel("./wykaz.xlsx", 1)
-	}
+
+		return c.SendString("initDB progress")
+	})
 
 	port := os.Getenv("PORT")
 	if port == "" {
