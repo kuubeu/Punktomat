@@ -16,7 +16,7 @@
       fixed-header
       fixed-footer
       height="calc(100vh - 124px)"
-      class="elevation-0 pa-0 ma-0"
+      class="elevation-0 pa-0 ma-0 data-table"
     >
       <template v-slot:[`item.data-table-select`]="{ isSelected, select }">
         <v-layout class="mt-n3 mb-n4">
@@ -187,6 +187,15 @@ export default {
       if (localStorage.getItem("starred"))
         this.selected = JSON.parse(localStorage.getItem("starred"));
     },
+    scrollUp() {
+      this.$vuetify.goTo(
+        '.data-table tbody tr',
+        {
+          offset: 50,
+          container: '.v-data-table__wrapper'
+        }
+      )
+    }
   },
 };
 </script>
