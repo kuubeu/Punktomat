@@ -58,14 +58,14 @@ func initModel(filename string, labelsRow int) {
 				categories = append(categories, enum.Category[number])
 			}
 		}
-		points, _ := strconv.Atoi(rows[i][7])
+		points, _ := strconv.Atoi(rows[i][8])
 		magazine := model.ScienceMagazine{
-			Title:       rows[i][1],
-			Issn:        rows[i][2],
-			Eissn:       rows[i][3],
-			SecondTitle: rows[i][4],
-			SecondIssn:  rows[i][5],
-			SecondEissn: rows[i][6],
+			Title:       rows[i][2],
+			Issn:        rows[i][3],
+			Eissn:       rows[i][4],
+			SecondTitle: rows[i][5],
+			SecondIssn:  rows[i][6],
+			SecondEissn: rows[i][7],
 			Points:      points,
 			Categories:  pq.StringArray(categories),
 		}
@@ -92,7 +92,7 @@ func main() {
 
 	var scienceMagazine []model.ScienceMagazine
 	if err := database.DBConn.First(&scienceMagazine).Error; err != nil {
-		initModel("./wykaz.xlsx", 3)
+		initModel("./wykaz.xlsx", 1)
 	}
 
 	port := os.Getenv("PORT")
