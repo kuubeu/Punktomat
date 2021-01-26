@@ -68,7 +68,7 @@
       </template>
       <template v-slot:[`item.chips`]="{ item }">
         <v-chip-group
-          v-if="item.Categories.length <= 2"
+          v-if="item.Categories.length <= 2 || $vuetify.breakpoint.xs"
           class="mr-n2"
         >
           <v-chip
@@ -202,12 +202,39 @@ export default {
 
 <style>
 .v-application p {
-  margin-bottom: 2px;
+  margin-bottom: 2px !important;
 }
 .v-application p:last-of-type {
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
 }
 /* small screen optimization */
+@media only screen and (max-width: 600px) {
+  .v-data-table > .v-data-table__wrapper > table > thead > tr > th {
+    padding-left: 0 !important;
+  }
+  td.v-data-table__mobile-row {
+    max-width: 100vw;
+    overflow: hidden;
+  }
+  .data-table td:last-child > .v-data-table__mobile-row__header {
+    display: none;
+  }
+  .data-table td:last-child {
+    padding: 0 !important;
+  }
+  .data-table .v-slide-group__wrapper {
+    max-width: 100%;
+  }
+  .data-table .v-item-group {
+    max-width: 100vw !important;
+  }
+  .data-table .v-slide-group__content {
+    margin-left: 14px;
+  }
+  .data-table .v-chip-group .v-chip:last-of-type {
+    margin-right: 28px;
+  }
+}
 @media only screen and (max-width: 480px) {
   .v-data-footer__select .v-select {
     margin: 13px 0 13px 18px !important;
