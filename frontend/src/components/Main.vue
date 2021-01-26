@@ -98,7 +98,9 @@
             </v-card-text>
 
             <v-card-actions>
-              <v-btn text @click="clearFilters">Wyczyść</v-btn>
+              <v-btn text @click="clearFilters">
+                <v-icon left>mdi-refresh</v-icon> Wyczyść
+              </v-btn>
 
               <v-spacer></v-spacer>
 
@@ -155,7 +157,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <v-tooltip v-else bottom :open-delay="200" transition="fade-transition">
+      <!-- <v-tooltip v-else bottom :open-delay="200" transition="fade-transition">
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon v-bind="attrs" v-on="on" class="ml-2">
             <v-icon>mdi-file-download-outline</v-icon>
@@ -170,7 +172,7 @@
           </v-btn>
         </template>
         <span>Więcej opcji</span>
-      </v-tooltip>
+      </v-tooltip> -->
     </v-app-bar>
 
     <v-main class="overflow-y-auto pa-0">
