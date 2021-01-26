@@ -80,7 +80,12 @@
             <v-subheader>Wybierz kategorie</v-subheader>
 
             <v-card-text>
-              <v-chip-group v-model="filters" column multiple class="mb-n4">
+              <v-chip-group
+                v-model="filters"
+                column
+                multiple
+                class="mb-n4"
+              >
                 <v-chip
                   v-for="chip in allCategories"
                   v-bind:key="chip"
@@ -93,7 +98,9 @@
             </v-card-text>
 
             <v-card-actions>
-              <v-btn text @click="clearFilters">Wyczyść</v-btn>
+              <v-btn text @click="clearFilters">
+                <v-icon left>mdi-refresh</v-icon> Wyczyść
+              </v-btn>
 
               <v-spacer></v-spacer>
 
@@ -118,7 +125,6 @@
             bottom
             offset-x="15"
             offset-y="20"
-            color="green"
             v-bind:content="selected.length"
           >
             <v-btn icon v-bind="attrs" v-on="on" class="ml-2">
@@ -128,7 +134,7 @@
         </template>
 
         <v-card>
-          <v-card-title class="headline grey lighten-2">
+          <v-card-title class="headline">
             Wybrane czasopisma
           </v-card-title>
           <MinTable v-bind:selectedMagazines="selected" />
@@ -146,12 +152,12 @@
                 genPDF();
               "
             >
-              Zapisz do PDF
+              <v-icon left>mdi-download-outline</v-icon> Zapisz do PDF
             </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <v-tooltip v-else bottom :open-delay="200" transition="fade-transition">
+      <!-- <v-tooltip v-else bottom :open-delay="200" transition="fade-transition">
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon v-bind="attrs" v-on="on" class="ml-2">
             <v-icon>mdi-file-download-outline</v-icon>
@@ -166,7 +172,7 @@
           </v-btn>
         </template>
         <span>Więcej opcji</span>
-      </v-tooltip>
+      </v-tooltip> -->
     </v-app-bar>
 
     <v-main class="overflow-y-auto pa-0">
@@ -401,5 +407,21 @@ export default {
 
 html {
   overflow-y: hidden;
+}
+.v-subheader {
+  margin: 0 8px;
+}
+/* touch chip scrolling */
+.v-slide-group__wrapper {
+  touch-action: unset;
+}
+/* small screen optimization */
+@media only screen and (max-width: 380px) {
+  .v-dialog:not(.v-dialog--fullscreen) {
+    margin: 0;
+  }
+  .v-dialog, .v-dialog .v-sheet.v-card {
+    border-radius: 0 !important;
+  }
 }
 </style>
