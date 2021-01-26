@@ -70,6 +70,7 @@ func initModel(filename string, labelsRow int) {
 			Categories:  pq.StringArray(categories),
 		}
 		database.DBConn.Create(&magazine)
+		fmt.Println(magazine.Title + " ADDED")
 	}
 
 	fmt.Println("Magazines successfully loaded")
