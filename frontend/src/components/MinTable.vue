@@ -10,7 +10,7 @@
       </v-layout>
     </template>
     <template v-slot:[`item.issn`]="{ item }">
-      {{ secondOrFirst(item.issn, item.item.secondIssn) || "brak" }}
+      {{ secondOrFirst(item.issn, item.secondIssn) || "brak" }}
     </template>
     <template v-slot:[`item.points`]="{ item }">
       <v-chip :color="getColor(item.points)">
