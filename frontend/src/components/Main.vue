@@ -80,12 +80,7 @@
             <v-subheader>Wybierz kategorie</v-subheader>
 
             <v-card-text>
-              <v-chip-group
-                v-model="filters"
-                column
-                multiple
-                class="mb-n4"
-              >
+              <v-chip-group v-model="filters" column multiple class="mb-n4">
                 <v-chip
                   v-for="chip in allCategories"
                   v-bind:key="chip"
@@ -306,6 +301,10 @@ export default {
   },
 
   methods: {
+    secondOrFirst(first, second) {
+      if (first) return first;
+      else return second;
+    },
     getDataFromApi() {
       this.loading = true;
       axios
@@ -366,7 +365,7 @@ export default {
       const table = [];
       this.selected.forEach((element) => {
         table.push([
-          element.title,
+          this.secondOrFirst(element.title, element.secondTitle),
           element.points,
           element.issn,
           element["e-issn"],
@@ -420,7 +419,8 @@ html {
   .v-dialog:not(.v-dialog--fullscreen) {
     margin: 0;
   }
-  .v-dialog, .v-dialog .v-sheet.v-card {
+  .v-dialog,
+  .v-dialog .v-sheet.v-card {
     border-radius: 0 !important;
   }
 }
