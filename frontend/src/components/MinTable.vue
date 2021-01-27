@@ -6,8 +6,11 @@
   >
     <template v-slot:[`item.title`]="{ item }">
       <v-layout class="mt-2 mb-2">
-        {{ item.title }}
+        {{ secondOrFirst(item.title, item.secondTitle) }}
       </v-layout>
+    </template>
+    <template v-slot:[`item.issn`]="{ item }">
+      {{ secondOrFirst(item.issn, item.secondIssn) || "brak" }}
     </template>
     <template v-slot:[`item.points`]="{ item }">
       <v-chip :color="getColor(item.points)">
@@ -22,11 +25,7 @@
       </v-layout>
     </template>
     <template v-slot:[`header.delete`]>
-      <v-tooltip
-        left
-        :open-delay="200"
-        transition="fade-transition"
-      >
+      <v-tooltip left :open-delay="200" transition="fade-transition">
         <template v-slot:activator="{ on, attrs }">
           <v-btn
             v-bind="attrs"
@@ -51,6 +50,10 @@
 export default {
   props: ["selectedMagazines"],
   methods: {
+    secondOrFirst(first, second) {
+      if (first) return first;
+      else return second;
+    },
     getColor(item) {
       if (item > 100) return "green lighten-2";
       else if (item > 50) return "lime lighten-2";

@@ -54,7 +54,7 @@
       </template>
       <template v-slot:[`item.title`]="{ item }">
         <v-layout class="mt-2 mb-2">
-          {{ item.title }}
+          {{ secondOrFirst(item.title, item.secondTitle) }}
         </v-layout>
       </template>
       <template v-slot:[`item.points`]="{ item }">
@@ -65,7 +65,7 @@
         </v-layout>
       </template>
       <template v-slot:[`item.issn`]="{ item }">
-        {{ item.issn }}
+        {{ secondOrFirst(item.issn, item.secondIssn) || "brak" }}
       </template>
       <template v-slot:[`item.chips`]="{ item }">
         <v-chip-group
@@ -91,11 +91,7 @@
           </v-chip>
           <v-tooltip bottom :open-delay="200" transition="fade-transition">
             <template v-slot:activator="{ on, attrs }">
-              <v-chip
-                v-bind="attrs"
-                v-on="on"
-                :ripple="false"
-              >
+              <v-chip v-bind="attrs" v-on="on" :ripple="false">
                 <v-icon>mdi-dots-horizontal</v-icon>
               </v-chip>
             </template>
@@ -173,6 +169,10 @@ export default {
   },
 
   methods: {
+    secondOrFirst(first, second) {
+      if (first.length != 0) return first;
+      else return second;
+    },
     getColor(item) {
       if (item > 100) return "green lighten-2";
       else if (item > 50) return "lime lighten-2";
@@ -189,14 +189,11 @@ export default {
         this.selected = JSON.parse(localStorage.getItem("starred"));
     },
     scrollUp() {
-      this.$vuetify.goTo(
-        '.data-table tbody tr',
-        {
-          offset: 50,
-          container: '.v-data-table__wrapper'
-        }
-      )
-    }
+      this.$vuetify.goTo(".data-table tbody tr", {
+        offset: 50,
+        container: ".v-data-table__wrapper",
+      });
+    },
   },
 };
 </script>
